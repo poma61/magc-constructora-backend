@@ -1,0 +1,61 @@
+html {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    padding: 0px;
+    margin: 50px;
+}
+
+.main-pdf {
+    position: relative;
+    line-height: 1.7; /* Un valor mayor a 1 aumenta el espacio entre líneas */
+    font-family: "Times New Roman", Times, serif;
+    font-size: 14px;
+}
+
+.main-pdf .header-title {
+    margin: 0px 10px;
+}
+
+.main-pdf .header-title h1 {
+    text-align: center;
+    font-weight: bold;
+    margin: 0px 20px;
+    font-size: 16px;
+}
+
+.main-pdf .text-parrafo {
+    margin: 10px 0px;
+    text-align: justify;
+}
+
+.main-pdf .text-parrafo-center {
+    margin: 10px 0px;
+    text-align: center;
+}
+
+.main-pdf .text-bold {
+    font-weight: bold;
+}
+
+.main-pdf .footer-page {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.main-pdf .footer-page table {
+    width: 100%;
+}
+
+.main-pdf .footer-page .as-full {
+    display: block;
+    text-align: center;
+    margin: 0px;
+    line-height: 1.5;
+    padding: 0px;
+}
+
+

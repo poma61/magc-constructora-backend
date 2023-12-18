@@ -1,0 +1,30 @@
+body,html{
+    overflow: auto;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/src/images/background.jpg);
+}
+.img__logo{
+    width: 600px;
+    height: 400px;
+    border-radius: 20px;
+}
+.as-box-shadow{
+background-color: rgb(214, 114, 0);
+border-radius: 10px;
+padding: 10px 50px;
+position: relative;
+top: 30px;
+box-shadow: 2px 6px 12px 0px rgba(0,0,0,0.83);
+-webkit-box-shadow: 2px 6px 12px 0px rgba(0,0,0,0.83);
+-moz-box-shadow: 2px 6px 12px 0px rgba(0,0,0,0.83);
+}
+.as-font-white{
+    color: rgb(255, 255, 255);
+}
+
