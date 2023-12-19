@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('detalle_contratos', function (Blueprint $table) {
-
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             //primera datos del cliente y el acreedor
@@ -67,8 +69,11 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('id_contrato')->references('id')->on('contratos');
         });
-    } //class
+    }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('detalle_contratos');

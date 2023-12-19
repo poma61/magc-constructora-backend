@@ -4,15 +4,24 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Desarrolladora;
 use App\Models\Personal;
 use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    
+
     public function run(): void
     {
+        Desarrolladora::create([
+            'nombres' => 'Celina',
+            'logo' => '/storage/imagenes/logo.jpg',
+            'direccion' => 'Santa Cruz',
+            'descripcion' => 'ninguna',
+            'status' => true,
+        ]);
+
         Personal::create([
             'nombres' => 'Admin',
             'apellido_paterno' => 'ap paterno',
@@ -24,11 +33,12 @@ class DatabaseSeeder extends Seeder
             'correo_electronico' => "system@gmail.com",
             'direccion' => 'La Paz - Bolivia',
             'status' => true,
-            'foto' => 'storage/imagenes/img-user.jpg',
+            'foto' => '/storage/imagenes/img-user.jpg',
+            'id_desarrolladora' => 1,
         ]);
 
         Usuario::create([
-            'user' => 'admin@gmail.com',
+            'user' => 'admin',
             'status' => true,
             'password' => '$2y$10$jjDb4siaEWs3Iw.sFqFwquRENoM/Lsi.IK6WL5L9fXF/x1GXKPfFq', //1234
             'id_personal' => 1,

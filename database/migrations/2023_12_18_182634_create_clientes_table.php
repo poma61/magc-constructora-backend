@@ -6,12 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
-
             $table->id();
             $table->string('nombres');
             $table->string('apellido_paterno');
@@ -22,14 +23,16 @@ return new class extends Migration
             $table->string('ci_expedido', 10);
             $table->text('direccion');
             $table->longText('descripcion');
-            $table->foreignId('id_personal');
+            $table->foreignId('id_desarrolladora');
             $table->boolean('status');
             $table->timestamps();
-
-            $table->foreign('id_personal')->references('id')->on('personals');
+            $table->foreign('id_desarrolladora')->references('id')->on('desarrolladoras');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('clientes');

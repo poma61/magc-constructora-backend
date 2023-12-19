@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inmobiliarias', function (Blueprint $table) {
+        Schema::create('contratos', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
+
             $table->id();
+            $table->string('n_contrato', 20);
+            $table->longText('descripcion');
+            $table->string('archivo_pdf')->nullable();
+            $table->boolean('status');
             $table->timestamps();
         });
     }
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inmobiliarias');
+        Schema::dropIfExists('contratos');
     }
 };

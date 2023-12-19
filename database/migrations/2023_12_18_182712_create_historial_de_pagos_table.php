@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('historial_de_pagos', function (Blueprint $table) {
@@ -22,7 +24,9 @@ return new class extends Migration
         });
     }
 
-
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('historial_de_pagos');
