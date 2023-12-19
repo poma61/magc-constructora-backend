@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('apellido_paterno');
             $table->string('apellido_materno');
             $table->string('n_de_contacto', 100); //string ya que los numeros telefonicos suelen ser grandes cifras
-            $table->string('correo_electronico');
+            $table->string('correo_electronico')->nullable();
             $table->string('ci', 100);
             $table->string('ci_expedido', 10);
             $table->text('direccion');

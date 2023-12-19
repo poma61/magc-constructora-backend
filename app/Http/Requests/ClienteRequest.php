@@ -21,20 +21,11 @@ class ClienteRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'nombres' => 'required',
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
             'n_de_contacto' => 'required',
-            'correo_electronico' =>  [
-                'required',
-                'email',
-                //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
-                //aplicamos el ignore cuando sea un update ya que el ci puede ser el mismo porque es una actualizacion del registro
-                Rule::unique('clientes')->where(function ($query) {
-                    $query->where('status', true);
-                })->ignore($this->input('id')),
-            ],
             'ci' => [
                 'required',
                 //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
@@ -47,6 +38,20 @@ class ClienteRequest extends FormRequest
             'direccion' => 'required',
             'descripcion' => 'required',
         ];
+
+        //empty => devuelve false cuando la variable NO esta vacia y/o null o cuando SI tiene contenido
+        if (empty($this->input('correo_electronico')) == false) {
+            $rules['correo_electronico'] = [
+                'email',
+                //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
+                //aplicamos el ignore cuando sea un update ya que el ci puede ser el mismo porque es una actualizacion del registro
+                Rule::unique('clientes')->where(function ($query) {
+                    $query->where('status', true);
+                })->ignore($this->input('id')),
+            ];
+        }
+
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator): HttpResponseException

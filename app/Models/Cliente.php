@@ -19,7 +19,7 @@ class Cliente extends Model
         'ci_expedido',
         'direccion',
         'descripcion',
-        'id_personal',
+        'id_desarrolladora',
         'status',
     ];
 
