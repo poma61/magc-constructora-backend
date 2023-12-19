@@ -21,9 +21,8 @@ class DesarrolladoraRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'nombres' => 'required',
-            'logo' => 'required|mimes:jpg,png,jpeg',
             'direccion' => 'required',
             'descripcion' => 'required',
             'correo_electronico' =>  [
@@ -35,6 +34,13 @@ class DesarrolladoraRequest extends FormRequest
                 })->ignore($this->input('id')),
             ],
         ];
+        if ($this->isMethod('PUT')) {
+            $rules['logo'] = 'sometimes|mimes:jpeg,png,jpg';
+        } else {
+            $rules['logo'] = 'required|mimes:jpeg,png,jpg';
+        }
+
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator): HttpResponseException

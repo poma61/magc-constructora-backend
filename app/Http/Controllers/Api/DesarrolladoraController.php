@@ -7,6 +7,7 @@ use App\Http\Requests\DesarrolladoraRequest;
 //add
 use App\Models\Desarrolladora;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class DesarrolladoraController extends Controller
@@ -35,8 +36,10 @@ class DesarrolladoraController extends Controller
     {
         try {
 
-            $desarrolladora = new Desarrolladora($request->all());
+            $desarrolladora = new Desarrolladora($request->except('logo'));
             $desarrolladora->status = true;
+            $image_path = $request->file('logo')->store('img/desarrolladora', 'public');
+            $desarrolladora->logo = "/storage/{$image_path}";
             $desarrolladora->save();
 
             return response()->json([
@@ -57,7 +60,15 @@ class DesarrolladoraController extends Controller
     {
         try {
             $desarrolladora = Desarrolladora::where('status', true)->where('id', $request->input('id'))->first();
-            $desarrolladora->update($request->all());
+            $desarrolladora->fill($request->except('logo'));
+            //verificar si subio una nueva imagen
+            if ($request->file('logo') != null) {
+                $parse_path_image=str_replace("/storage", "", $desarrolladora->logo);
+                Storage::disk('public')->delete($parse_path_image);
+                $image_path = $request->file('logo')->store('img/desarrolladora', 'public');
+                $desarrolladora->logo = "/storage/{$image_path}";
+            }
+            $desarrolladora->update();
 
             return response()->json([
                 'status' => true,

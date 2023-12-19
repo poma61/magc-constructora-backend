@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         Desarrolladora::create([
             'nombres' => 'Celina',
-            'logo' => '/storage/imagenes/logo.jpg',
+            'logo' => '/storage/images/desarrolladora/logo-celina.png',
             'direccion' => 'Santa Cruz',
             'descripcion' => 'ninguna',
             'status' => true,
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'correo_electronico' => "system@gmail.com",
             'direccion' => 'La Paz - Bolivia',
             'status' => true,
-            'foto' => '/storage/imagenes/img-user.jpg',
+            'foto' => '/storage/images/personal/user.png',
             'id_desarrolladora' => 1,
         ]);
 
