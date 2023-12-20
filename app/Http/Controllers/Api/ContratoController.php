@@ -22,7 +22,7 @@ class ContratoController extends Controller
             $desarrolladora = Desarrolladora::where('status', true)
                 ->where('nombres', $request->input('desarrolladora'))
                 ->first();
-            //debemos verificar si la desarrolladora existe en la base de datos por seguridad
+               //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
             if ($desarrolladora == null) {
                 return response()->json([
                     'records' => null,
@@ -68,7 +68,7 @@ class ContratoController extends Controller
             $desarrolladora = Desarrolladora::where('status', true)
                 ->where('nombres', $request->input('desarrolladora'))
                 ->first();
-            //debemos verificar si la desarrolladora existe en la base de datos por seguridad
+               //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
             if ($desarrolladora == null) {
                 return response()->json([
                     'records' => null,
@@ -97,6 +97,9 @@ class ContratoController extends Controller
 
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
+
+           //agregamos para enviar datos al frontend
+           $contrato['fecha_firma_contrato'] = $request->input('fecha_firma_contrato');
 
             return response()->json([
                 'status' => true,
@@ -164,6 +167,9 @@ class ContratoController extends Controller
             // si todo es ok entonces eliminados el archivo pdf antiguo
             $parse_path_pdf = str_replace('/storage', "", $antiguo_pdf_path);
             Storage::disk('public')->delete($parse_path_pdf);
+
+            //agregamos para enviar datos al frontend
+            $contrato['fecha_firma_contrato'] = $request->input('fecha_firma_contrato');
 
             return response()->json([
                 'status' => true,

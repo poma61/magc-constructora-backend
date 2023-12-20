@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('detalle_contratos', function (Blueprint $table) {
@@ -19,8 +17,10 @@ return new class extends Migration
             $table->string('n_de_lote');
             $table->string('n_de_uv');
             $table->string('zona');
-            $table->string('superficie_terreno'); //opciones definidas en el formulario
-            $table->double('valor_terreno_numeral', 40, 2)->nullable();
+            $table->string('terreno_superficie');
+            $table->double('terreno_valor_total_numeral', 40, 2)->nullable();
+            $table->double('terreno_val_couta_inicial_numeral', 40, 2)->nullable();
+            $table->double('terreno_val_couta_mensual_numeral', 40, 2)->nullable();
             $table->string('numero_distrito');
             $table->string('numero_identificacion_terreno'); //debe ser string algunos no tienen numero entonces se coloca  'S/N=sin numero'
             //tecera
@@ -39,20 +39,20 @@ return new class extends Migration
             $table->string('construccion_descripcion');
             $table->double('construccion_superficie_terreno');
             //numero_identificacion_terreno
-            $table->string('construccion_valor_literal');
-            $table->double('construccion_valor_numeral', 40, 2);
+            $table->string('construccion_valor_total_literal');
+            $table->double('construccion_valor_total_numeral', 40, 2);
 
             //quinta
-            $table->string('construccion_valor_couta_inicial_literal');
-            $table->double('construccion_valor_couta_inicial_numeral', 40, 2);
+            $table->string('construccion_val_couta_inicial_literal');
+            $table->double('construccion_val_couta_inicial_numeral', 40, 2);
 
-            $table->string('construccion_valor_couta_mensual_literal');
-            $table->double('construccion_valor_couta_mensual_numeral',40, 2);
+            $table->string('construccion_val_couta_mensual_literal');
+            $table->double('construccion_val_couta_mensual_numeral', 40, 2);
             $table->integer('construccion_cantidad_couta_mensual');
 
             //las tres primeras coutas son editables
             //para visualizar el la tabla del contrato que se generara
-            $table->double('primera_val_couta_mensual_numeral', 40, 2);//verificar si aumentar la palabra 'construccion'
+            $table->double('primera_val_couta_mensual_numeral', 40, 2); //verificar si aumentar la palabra 'construccion'
             $table->double('segunda_val_couta_mensual_numeral', 40, 2);
             $table->double('tercera_val_couta_mensual_numeral', 40, 2);
             //sexta
@@ -71,9 +71,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
         Schema::dropIfExists('detalle_contratos');

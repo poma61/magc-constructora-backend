@@ -18,7 +18,7 @@ class HistorialDePagoClienteController extends Controller
             $desarrolladora = Desarrolladora::where('status', true)
                 ->where('nombres', $request->input('desarrolladora'))
                 ->first();
-            //debemos verificar si la desarrolladora existe en la base de datos por seguridad
+                //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
             if ($desarrolladora == null) {
                 return response()->json([
                     'records' => null,
