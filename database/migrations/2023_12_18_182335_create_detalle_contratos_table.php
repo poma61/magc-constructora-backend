@@ -25,16 +25,16 @@ return new class extends Migration
             $table->string('numero_distrito');
             $table->string('numero_identificacion_terreno'); //debe ser string algunos no tienen numero entonces se coloca  'S/N=sin numero'
             //tecera
-            $table->string('norte_medida_terreno');
+            $table->integer('norte_medida_terreno');
             $table->string('norte_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
 
-            $table->string('sur_medida_terreno');
+            $table->integer('sur_medida_terreno');
             $table->string('sur_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
 
-            $table->string('este_medida_terreno');
+            $table->integer('este_medida_terreno');
             $table->string('este_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
 
-            $table->string('oeste_medida_terreno');
+            $table->integer('oeste_medida_terreno');
             $table->string('oeste_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
             //cuarta
             $table->string('construccion_descripcion');

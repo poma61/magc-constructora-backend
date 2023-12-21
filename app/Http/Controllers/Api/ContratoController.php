@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ClienteRequest;
 use App\Http\Requests\DetalleCByContratoRequest;
+use App\Models\Cliente;
 use App\Models\ClienteHasContrato;
 use Illuminate\Http\Request;
 //add
@@ -77,6 +77,19 @@ class ContratoController extends Controller
                     'message' => "No se encontro la desarrolladora {$request->input('desarrolladora')}",
                 ], 404);
             }
+
+            $clients=$request->input('clients');
+
+            $cliente = new Cliente($clients[0]);
+            $cliente->id_desarrolladora = $desarrolladora->id;
+            $cliente->status = true;
+            $cliente->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => "Contrato generado exitosamente!",
+                'records'=>$cliente,
+            ]);
 
             //el $fillable del modelo son todos los campos que se insertan en la base de datos
             //si el campo a insertar no esta listado en el array $fillable entonces

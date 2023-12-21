@@ -25,7 +25,7 @@ class ClienteRequest extends FormRequest
             'nombres' => 'required',
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
-            'n_de_contacto' => 'required',
+            'n_de_contacto' => 'required|numeric',
             'ci' => [
                 'required',
                 //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
