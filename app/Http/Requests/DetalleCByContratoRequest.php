@@ -24,8 +24,8 @@ class DetalleCByContratoRequest extends FormRequest
             //contratos => ningun campo es necesario
 
             //detalle contrato
-            'detalle_contrato.n_de_lote' => 'required',
-            'detalle_contrato.n_de_uv' => 'required',
+            'detalle_contrato.n_de_lote' => 'required', //puede string string o numero
+            'detalle_contrato.n_de_uv' => 'required', //puede string string o numero
             'detalle_contrato.zona' => 'required',
             'detalle_contrato.terreno_superficie' => 'required|numeric',
             'detalle_contrato.numero_distrito' => 'required|numeric',
@@ -101,59 +101,70 @@ class DetalleCByContratoRequest extends FormRequest
     public function messages(): array
     {
         $messages = [
-            'id_personal.required' => 'El campo personal es requerido.',
-            'type_role.required' => 'El campo rol es requerido.',
-            'password.required' => 'El campo contraseña es requerido.',
-            'password.min' => 'El campo contraseña debe tener al menos 8 caracteres.',
-
             //detalle contrato
-            'detalle_contrato.n_de_lote.required' => 'El campo personal es requerido.',
-            'detalle_contrato.n_de_uv.required' => 'El campo personal es requerido.',
-            'detalle_contrato.zona.required' => 'El campo personal es requerido.',
-            'detalle_contrato.terreno_superficie.required' => 'El campo personal es requerido.',
-            'detalle_contrato.numero_distrito.required' => 'El campo personal es requerido.',
-            'detalle_contrato.numero_identificacion_terreno.required' => 'El campo personal es requerido.', //puede string string o numero
-            'detalle_contrato.norte_medida_terreno.required' => 'El campo personal es requerido.',
-            'detalle_contrato.norte_colinda_lote.required' => 'El campo personal es requerido.',
-            'detalle_contrato.sur_medida_terreno.required' => 'El campo personal es requerido.',
-            'detalle_contrato.sur_colinda_lote.required' => 'El campo personal es requerido.',
-            'detalle_contrato.este_medida_terreno.required' => 'El campo personal es requerido.',
-            'detalle_contrato.este_colinda_lote.required' => 'El campo personal es requerido.',
-            'detalle_contrato.oeste_medida_terreno.required' => 'El campo personal es requerido.',
-            'detalle_contrato.oeste_colinda_lote.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_descripcion.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_superficie_terreno.required' => '',
-            'detalle_contrato.construccion_valor_total_literal.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_valor_total_numeral.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_cantidad_meses_de_entrega.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_val_couta_inicial_literal.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_val_couta_inicial_numeral.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_val_couta_mensual_literal.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_val_couta_mensual_numeral.required' => 'El campo personal es requerido.',
-            'detalle_contrato.construccion_cantidad_couta_mensual.required' => 'El campo personal es requerido.',
-            'detalle_contrato.primera_val_couta_mensual_numeral.required' => 'El campo personal es requerido.',
-            'detalle_contrato.segunda_val_couta_mensual_numeral.required' => 'El campo personal es requerido.',
-            'detalle_contrato.tercera_val_couta_mensual_numeral.required' => 'El campo personal es requerido.',
-            'detalle_contrato.lugar_firma_contrato.required' => 'El campo personal es requerido.',
-            'detalle_contrato.fecha_firma_contrato.required' => 'El campo personal es requerido.',
-            'detalle_contrato.fecha_firma_contrato.date' => 'El campo fecha firma contrato no es una fecha válida',
+            'detalle_contrato.n_de_lote.required' => 'El campo n° de lote es requerido.',
+            'detalle_contrato.n_de_uv.required' => 'El campo n° de uv es requerido.',
+            'detalle_contrato.zona.required' => 'El campo zona es requerido.',
+            'detalle_contrato.terreno_superficie.required' => 'El campo superficie de terreno es requerido.',
+            'detalle_contrato.terreno_superficie.numeric' => 'El campo superficie de terreno debe ser un número.',
+            'detalle_contrato.numero_distrito.required' => 'El campo numero de distrito es requerido.',
+            'detalle_contrato.numero_identificacion_terreno.required' => 'El campo n° de identificación de terreno es requerido.', 
+            'detalle_contrato.norte_medida_terreno.required' => 'El campo norte, medida del terreno es requerido.',
+            'detalle_contrato.norte_medida_terreno.numeric' => 'El campo norte, medida del terreno debe ser un número.',
+            'detalle_contrato.norte_colinda_lote.required' => 'El campo norte, colinda con lote es requerido.',
+            'detalle_contrato.sur_medida_terreno.required' => 'El campo sur, medida del terreno es requerido.',
+            'detalle_contrato.sur_medida_terreno.numeric' => 'El campo sur, medida del terreno debe ser un número.',
+            'detalle_contrato.sur_colinda_lote.required' => 'El campo sur, colinda con lote es requerido.',
+            'detalle_contrato.este_medida_terreno.required' => 'El campo este, medida del terreno es requerido.',
+            'detalle_contrato.este_medida_terreno.numeric' => 'El campo este, medida del terreno debe ser un número.',
+            'detalle_contrato.este_colinda_lote.required' => 'El campo este, colinda con lote es requerido.',
+            'detalle_contrato.oeste_medida_terreno.required' => 'El campo oeste, medida del terreno es requerido.',
+            'detalle_contrato.oeste_medida_terreno.numeric' => 'El campo oeste, medida del terreno debe ser un número.',
+            'detalle_contrato.oeste_colinda_lote.required' => 'El campo oeste, colinda con lote es requerido.',
+            'detalle_contrato.construccion_descripcion.required' => 'El campo descripción del inmueble, construcción es requerido.',
+            'detalle_contrato.construccion_superficie_terreno.required' => 'El campo superficie del terreno, construcción es requerido.',
+            'detalle_contrato.construccion_superficie_terreno.numeric' => 'El campo superficie del terreno, construcción debe ser un número.',
+            'detalle_contrato.construccion_valor_total_literal.required' => 'El campo valor total en literal de la construccion es requerido.',
+            'detalle_contrato.construccion_valor_total_numeral.required' => 'El campo valor total de la construccion es requerido.',
+            'detalle_contrato.construccion_valor_total_numeral.numeric' => 'El campo valor total de la construccion debe ser un número.',
+            'detalle_contrato.construccion_cantidad_meses_de_entrega.required' => 'El campo cantidad de meses de entrega, construcción es requerido.',
+            'detalle_contrato.construccion_val_couta_inicial_literal.required' => 'El campo couta inicial en literal de la construcción es requerido.',
+            'detalle_contrato.construccion_val_couta_inicial_numeral.required' => 'El campo couta inicial de la construcción es requerido.',
+            'detalle_contrato.construccion_val_couta_inicial_numeral.numeric' => 'El campo couta inicial de la construcción debe ser un número.',
+            'detalle_contrato.construccion_val_couta_mensual_literal.required' => 'El campo couta mensual en literal de la construcción es requerido.',
+            'detalle_contrato.construccion_val_couta_mensual_numeral.required' => 'El campo  couta mensual de la construcción es requerido.',
+            'detalle_contrato.construccion_val_couta_mensual_numeral.numeric' => 'El campo  couta mensual de la construcción debe ser un número.',
+            'detalle_contrato.construccion_cantidad_couta_mensual.required' => 'El campo cantidad de meses, couta mensual, construcción es requerido.',
+            'detalle_contrato.construccion_cantidad_couta_mensual.numeric' => 'El campo cantidad de meses, couta mensual, construcción debe ser un número.',
+            'detalle_contrato.primera_val_couta_mensual_numeral.required' => 'El campo primera couta mensual es requerido.',
+            'detalle_contrato.primera_val_couta_mensual_numeral.numeric' => 'El campo primera couta mensual debe ser un número.',
+            'detalle_contrato.segunda_val_couta_mensual_numeral.required' => 'El campo segunda couta mensual es requerido.',
+            'detalle_contrato.segunda_val_couta_mensual_numeral.numeric' => 'El campo segunda couta mensual debe ser un número.',
+            'detalle_contrato.tercera_val_couta_mensual_numeral.required' => 'El campo tercera couta mensual es requerido.',
+            'detalle_contrato.tercera_val_couta_mensual_numeral.numeric' => 'El campo tercera couta mensual debe ser un número.',
+            'detalle_contrato.lugar_firma_contrato.required' => 'El campo lugar de la firma del contrato es requerido.',
+            'detalle_contrato.fecha_firma_contrato.required' => 'El campo fecha de la firma del contrato es requerido.',
+            'detalle_contrato.fecha_firma_contrato.date' => 'El campo fecha de la firma del contrato no es una fecha válida',
             //add info terreno
-            'detalle_contrato.terreno_valor_total_numeral' => 'El campo personal es requerido.',
-            'detalle_contrato.terreno_valor_total_literal' => 'El campo personal es requerido.',
-            'detalle_contrato.terreno_val_couta_inicial_numeral' => 'El campo personal es requerido.',
-            'detalle_contrato.terreno_val_couta_mensual_numeral' => 'El campo personal es requerido.',
+            'detalle_contrato.terreno_valor_total_numeral.required' => 'El campo valor total del terreno es requerido.',
+            'detalle_contrato.terreno_valor_total_numeral.numeric' => 'El campo valor total del terreno debe ser un número.',
+            'detalle_contrato.terreno_valor_total_literal.required' => 'El campo valor total en literal del terreno en es requerido.',
+            'detalle_contrato.terreno_val_couta_inicial_numeral.required' => 'El campo couta inicial del terreno es requerido.',
+            'detalle_contrato.terreno_val_couta_inicial_numeral.numeric' => 'El campo couta inicial del terreno debe ser un número.',
+            'detalle_contrato.terreno_val_couta_mensual_numeral.required' => 'El campo couta mensual del terreno es requerido.',
+            'detalle_contrato.terreno_val_couta_mensual_numeral.numeric' => 'El campo couta mensual del terreno debe ser un número.',
 
         ];
 
         foreach ($this->input('clients', []) as $key => $client) {
             //clients=> es el nombre del array de objetos que se envia desde el frontend
-            $messages["clients.{$key}.id"] = 'El campo personal es requerido.'; 
-            $messages["clients.{$key}.nombres"] = 'El campo personal es requerido.';
-            $messages["clients.{$key}.apellido_paterno"] = 'El campo personal es requerido.';
-            $messages["clients.{$key}.apellido_materno"] = 'El campo personal es requerido.';
-            $messages["clients.{$key}.n_de_contacto"] = 'El campo personal es requerido.';
-            $messages["clients.{$key}.ci.required"] = 'El campo personal es requerido.';
-            $messages["clients.{$key}.ci_expedido.required"] = 'El campo personal es requerido.';
+            $messages["clients.{$key}.id"] = 'El campo id es requerido.'; 
+            $messages["clients.{$key}.nombres"] = 'El campo nombres es requerido.';
+            $messages["clients.{$key}.apellido_paterno"] = 'El campo apellido paterno es requerido.';
+            $messages["clients.{$key}.apellido_materno"] = 'El campo apellido materno es requerido.';
+            $messages["clients.{$key}.n_de_contacto"] = 'El campo n° de contacto es requerido.';
+            $messages["clients.{$key}.ci.required"] = 'El campo ci es requerido.';
+            $messages["clients.{$key}.ci_expedido.required"] = 'El campo expedido es requerido.';
             $messages["clients.{$key}.direccion.required"] = 'El campo direccion es requerido.';
             $messages["clients.{$key}.correo_electronico.email"] = 'El formato del correo electronico no es válido.';
             $messages["clients.{$key}.correo_electronico.unique"] = 'El campo correo electronico ya ha sido tomado.';
