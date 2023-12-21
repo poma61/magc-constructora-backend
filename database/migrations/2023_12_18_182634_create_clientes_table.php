@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('ci', 100);
             $table->string('ci_expedido', 10);
             $table->text('direccion');
-            $table->longText('descripcion');
+            $table->longText('descripcion')->nullable();
             $table->foreignId('id_desarrolladora');
             $table->boolean('status');
             $table->timestamps();

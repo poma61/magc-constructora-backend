@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('zona');
             $table->string('terreno_superficie');
             $table->double('terreno_valor_total_numeral', 40, 2)->nullable();
+            $table->string('terreno_valor_total_literal')->nullable();
             $table->double('terreno_val_couta_inicial_numeral', 40, 2)->nullable();
             $table->double('terreno_val_couta_mensual_numeral', 40, 2)->nullable();
             $table->string('numero_distrito');
@@ -41,6 +42,7 @@ return new class extends Migration
             //numero_identificacion_terreno
             $table->string('construccion_valor_total_literal');
             $table->double('construccion_valor_total_numeral', 40, 2);
+            $table->integer('construccion_cantidad_meses_de_entrega');
 
             //quinta
             $table->string('construccion_val_couta_inicial_literal');

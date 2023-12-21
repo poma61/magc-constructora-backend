@@ -36,7 +36,6 @@ class ClienteRequest extends FormRequest
             ],
             'ci_expedido' => 'required',
             'direccion' => 'required',
-            'descripcion' => 'required',
         ];
 
         //empty => devuelve false cuando la variable NO esta vacia y/o null o cuando SI tiene contenido

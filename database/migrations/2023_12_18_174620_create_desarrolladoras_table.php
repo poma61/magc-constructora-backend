@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nombres');
             $table->string('logo');
             $table->text('direccion');
-            $table->text('descripcion');
+            $table->text('descripcion')->nullable();
             $table->string('correo_electronico')->nullable();
             $table->boolean('status');
             $table->timestamps();

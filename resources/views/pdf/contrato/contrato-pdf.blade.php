@@ -1,4 +1,3 @@
-{{-- es una copia no esta modificado nada --}}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -35,34 +34,100 @@
                 del presente documento privado y que en adelante denominará <span class="text-bold">“EL
                     ACREEDOR”.</span>
         </p>
+        @switch($numbers_of_clients)
+            @case(1)
+                <p class="text-parrafo">
+                    <span class="text-bold">
+                        1.2. {{ strtoupper($contrato_cliente->nombres) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->apellido_paterno) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->apellido_materno) }},
+                    </span>&nbsp;portador de la cédula de identidad N°&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->ci }} {{ $contrato_cliente->ci_expedido }},&nbsp;
+                    </span>
+                    mayor de edad, hábil por ley, domiciliado en&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->direccion }}&nbsp;
+                    </span>
+                    en esta ciudad, quien en adelante para efecto del&nbsp;
+                    presente documento se lo denominará,
+                    <span class="text-bold"> "DEUDOR". </span>
+                </p>
+            @break
 
-        <p class="text-parrafo">
-            <span class="text-bold">
-                1.2. {{ strtoupper($contrato_cliente->nombres) }}&nbsp;
-                {{ strtoupper($contrato_cliente->apellido_paterno) }}&nbsp;
-                {{ strtoupper($contrato_cliente->apellido_materno) }},
-            </span>&nbsp;portador de la cédula de identidad para
-            N° <span class="text-bold"> {{ $contrato_cliente->ci }}&nbsp;{{ $contrato_cliente->ci_expedido }}, </span>
-            mayor de edad, hábil por ley, domiciliada {{ $contrato_cliente->direccion }} en esta ciudad, quien en
-            adelante para efecto del
-            presente documento se lo denominará,
-            <span class="text-bold">“EL DEUDOR”.</span>
-        </p>
+            @case(2)
+                <p class="text-parrafo">
+                    <span class="text-bold">
+                        1.2. {{ strtoupper($contrato_cliente->first_client_nombres) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->first_client_apellido_paterno) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->first_client_apellido_materno) }},
+                    </span>&nbsp;portador de la cédula de identidad N°&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->first_client_ci }} {{ $contrato_cliente->first_client_ci_expedido }},&nbsp;
+                    </span> y&nbsp;
+                    <span class="text-bold">
+                        1.2. {{ strtoupper($contrato_cliente->second_client_nombres) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->second_client_apellido_paterno) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->second_client_apellido_materno) }},&nbsp;
+                    </span>portador de la cédula de identidad N°&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->second_client_ci }} {{ $contrato_cliente->second_client_ci_expedido }},&nbsp;
+                    </span>
+                    ambos mayores de edad, hábil por ley, domiciliado en&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->direccion }}&nbsp;
+                    </span>
+                    en esta ciudad, quien en adelante para efecto del&nbsp;
+                    presente documento se lo denominará,
+                    <span class="text-bold"> "DEUDOR". </span>
+                </p>
+            @break
 
-        <p class="text-parrafo">
-            <span class="text-bold"> SEGUNDA: (DERECHO PROPIETARIO).- EL ACREEDOR,</span> declara ser aportante de la
-            construcción de un inmueble
-            identificado legalmente en el lote <span class="text-bold"> {{ $contrato_cliente->n_de_lote }}, </span>en
-            la U.V.
-            <span class="text-bold"> {{ $contrato_cliente->n_de_uv }}, </span>
-            <span class="text-bold"> zona {{ $contrato_cliente->zona }}, </span>con una superficie de terreno
-            de <span class="text-bold"> {{ $contrato_cliente->superficie_terreno }} m<sup>2</sup>, </span>
-            Distrito <span class="text-bold"> {{ $contrato_cliente->numero_distrito }}, </span> que a la
-            fecha se encuentra registrado en Derechos
-            Reales bajo la Matrícula Computarizada N° <span
-                class="text-bold">{{ $contrato_cliente->numero_identificacion_terreno }}. </span>
-        </p>
-
+            @default
+                <p class="text-parrafo">
+                    <span class="text-bold" style="color:red">
+                        ERROR AL LISTAR CLIENTE
+                    </span>
+            @endswitch
+            @if ($additional_terrain)
+                <p class="text-parrafo">
+                    <span class="text-bold"> SEGUNDA: (DERECHO PROPIETARIO).- EL ACREEDOR,</span> declara ser aportante
+                    de la construcción de un inmueble&nbsp;
+                    identificado legalmente en el lote <span class="text-bold"> {{ $contrato_cliente->n_de_lote }},
+                    </span>en
+                    la U.V.
+                    <span class="text-bold"> {{ $contrato_cliente->n_de_uv }}, </span>
+                    <span class="text-bold"> zona {{ $contrato_cliente->zona }}, </span>con una superficie de terreno
+                    de <span class="text-bold"> {{ $contrato_cliente->terreno_superficie }} m<sup>2</sup>, </span>
+                    y con una suma de&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->terreno_valor_total_literal }} Dólares Americanos&nbsp;
+                        ($us. {{ $contrato_cliente->terreno_valor_total_numeral }})&nbsp;
+                    </span>
+                    Distrito <span class="text-bold"> {{ $contrato_cliente->numero_distrito }}, </span> que a la
+                    fecha se encuentra registrado en Derechos&nbsp;
+                    Reales bajo la Matrícula Computarizada N°&nbsp;
+                    <span class="text-bold">
+                        {{ $contrato_cliente->numero_identificacion_terreno }}.
+                    </span>
+                </p>
+            @else
+                <p class="text-parrafo">
+                    <span class="text-bold"> SEGUNDA: (DERECHO PROPIETARIO).- EL ACREEDOR,</span> declara ser
+                    aportante&nbsp;
+                    de la construcción de un inmueble&nbsp;
+                    identificado legalmente en el lote <span class="text-bold"> {{ $contrato_cliente->n_de_lote }},
+                    </span> en la U.V.&nbsp;
+                    <span class="text-bold"> {{ $contrato_cliente->n_de_uv }}, </span>
+                    <span class="text-bold"> zona {{ $contrato_cliente->zona }}, </span>con una superficie de
+                    terreno&nbsp;
+                    de <span class="text-bold"> {{ $contrato_cliente->terreno_superficie }} m<sup>2</sup>, </span>
+                    Distrito <span class="text-bold"> {{ $contrato_cliente->numero_distrito }}, </span> que a la&nbsp;
+                    fecha se encuentra registrado en Derechos&nbsp;
+                    Reales bajo la Matrícula Computarizada N°&nbsp;
+                    <span class="text-bold"> {{ $contrato_cliente->numero_identificacion_terreno }}. </span>
+                </p>
+            @endif
         <p class="text-parrafo">
             <span class="text-bold"> TERCERA: (COLINDANCIAS).- </span> El inmueble identificado legalmente con el N°
             <span class="text-bold"> {{ $contrato_cliente->numero_identificacion_terreno }}, </span>
@@ -92,17 +157,39 @@
             colinda con lote
             <span class="text-bold"> {{ $contrato_cliente->oeste_colinda_lote }}. </span>
         </p>
+        @if ($additional_terrain)
+            <p class="text-parrafo">
+                <span class="text-bold"> CUARTA: (COMPROMISO DE CONSTRUCCIÓN DE INMUEBLE URBANO
+                    {{ strtoupper($contrato_cliente->construccion_descripcion) }} CON UNA SUPERFICIE&nbsp;
+                    DE {{ $contrato_cliente->construccion_superficie_terreno }} m<sup>2</sup>,&nbsp;
+                    CON EL TERRENO MENCIONADO&nbsp;
+                    ANTERIORMENTE Y RECONOCIMIENTO DE DEUDA).-</span>
+                EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
+                compromete a construir el inmueble signado legalmente con el N°
+                <span class="text-bold"> {{ $contrato_cliente->numero_identificacion_terreno }}, </span> señalado
+                en las cláusulas segunda y tercera del presente documento, por el valor de la suma de
+                {{ $contrato_cliente->construccion_valor_total_literal }} Dólares Americanos
+                ($us. {{ $contrato_cliente->construccion_valor_total_numeral }}.-).
+            </p>
+        @else
+            <p class="text-parrafo">
+                <span class="text-bold"> CUARTA: (COMPROMISO DE CONSTRUCCIÓN DE INMUEBLE URBANO
+                    {{ strtoupper($contrato_cliente->construccion_descripcion) }} CON UNA SUPERFICIE&nbsp;
+                    DE {{ $contrato_cliente->construccion_superficie_terreno }} m<sup>2</sup>,&nbsp;
+                    Y RECONOCIMIENTO DE DEUDA).-</span>
+                EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
+                compromete a construir el inmueble signado legalmente con el N°
+                <span class="text-bold"> {{ $contrato_cliente->numero_identificacion_terreno }}, </span> señalado
+                en las cláusulas segunda y tercera del presente documento, por el valor de la suma de
+                {{ $contrato_cliente->construccion_valor_total_literal }} Dólares Americanos
+                ($us. {{ $contrato_cliente->construccion_valor_total_numeral }}.-).
+            </p>
+        @endif
 
         <p class="text-parrafo">
-            <span class="text-bold"> CUARTA: (COMPROMISO DE CONSTRUCCIÓN DE INMUEBLE URBANO CON UNA SUPERFICIE
-                DE {{ $contrato_cliente->superficie_terreno }} m<sup>2</sup> Y RECONOCIMIENTO DE
-                DEUDA).-</span>
-            EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
-            compromete a construir el inmueble signado legalmente con el N°
-            <span class="text-bold"> {{ $contrato_cliente->numero_identificacion_terreno }}, </span> señalado
-            en las cláusulas segunda y tercera del presente documento, por el valor de la suma de
-            {{ $contrato_cliente->valor_construccion_literal }} Dólares Americanos
-            ($us. {{ $contrato_cliente->valor_construccion_numeral }}.-).
+            Con un plazo maximo de entrega de {{ $contrato_cliente->construccion_cantidad_meses_de_entrega }} meses,
+            despues de la
+            firma del contrato.
         </p>
 
         <p class="text-parrafo">
@@ -157,6 +244,7 @@
         </p>
 
         {{-- aqui va la tabla --}}
+
         <p class="text-parrafo">
             <span class="text-bold"> SEXTA: (DESISTIMIENTO UNILATERAL).-</span> Para el caso de que <span
                 class="text-bold"> EL DEUDOR </span> incumpliera con la obligación de cancelar el&nbsp;
@@ -186,22 +274,58 @@
             circunstancia, ni excepciones solicitadas, se efectuará la entrega del inmueble, materia del presente
             contrato.
         </p>
+        @switch($numbers_of_clients)
+            @case(1)
+                <p class="text-parrafo">
+                    <span class="text-bold">OCTAVA: (ACEPTACIÓN Y CONFORMIDAD).- </span>
+                    Nosotros: <span class="text-bold">
+                        MIGUEL ANGEL GUZMAN CABRERA&nbsp;
+                        como ACREEDOR&nbsp;
+                    </span> por una parte y por la otra&nbsp;
+                    <span class="text-bold">
+                        {{ strtoupper($contrato_cliente->nombres) }}&nbsp;{{ strtoupper($contrato_cliente->apellido_paterno) }}
+                        {{ strtoupper($contrato_cliente->apellido_materno) }},</span> como&nbsp;
+                    <span class="text-bold"> DEUDOR </span>
+                    aceptamos el presente contrato en todas y cada una de sus partes, declarando&nbsp;
+                    estar conformes y debidamente enterados&nbsp;
+                    de su redacción, obligándonos a su fiel y estricto cumplimiento, firmándolo&nbsp;
+                    en constancia en un original&nbsp;
+                    y dos copias de un mismo tenor y para un solo efecto.
+                </p>
+            @break
 
-        <p class="text-parrafo">
-            <span class="text-bold">OCTAVA: (ACEPTACIÓN Y CONFORMIDAD).- Nosotros: MIGUEL ANGEL GUZMAN CABRERA
-                como ACREEDOR </span> por una parte y por la otra
-            <span class="text-bold">
-                {{ strtoupper($contrato_cliente->nombres) }}&nbsp;{{ strtoupper($contrato_cliente->apellido_paterno) }}
-                {{ strtoupper($contrato_cliente->apellido_materno) }},</span> como&nbsp;
-            <span class="text-bold">
-                EL DEUDOR
-            </span>
-            aceptamos el presente contrato en todas y cada una de sus partes, declarando&nbsp;
-            estar conformes y debidamente enterados&nbsp;
-            de su redacción, obligándonos a su fiel y estricto cumplimiento, firmándolo&nbsp;
-            en constancia en un original&nbsp;
-            y dos copias de un mismo tenor y para un solo efecto.
-        </p>
+            @case(2)
+                <p class="text-parrafo">
+                    <span class="text-bold">OCTAVA: (ACEPTACIÓN Y CONFORMIDAD).- </span>
+                    Nosotros: <span class="text-bold">
+                        MIGUEL ANGEL GUZMAN CABRERA&nbsp;
+                        como ACREEDOR&nbsp;
+                    </span> por una parte y por la otra&nbsp;
+                    <span class="text-bold">
+                        {{ strtoupper($contrato_cliente->first_client_nombres) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->first_client_apellido_paterno) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->first_client_apellido_materno) }},
+                    </span> y&nbsp;
+                    <span class="text-bold">
+                        {{ strtoupper($contrato_cliente->second_client_nombres) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->second_client_apellido_paterno) }}&nbsp;
+                        {{ strtoupper($contrato_cliente->second_client_apellido_materno) }},
+                    </span> como&nbsp;
+                    <span class="text-bold"> DEUDOR </span>
+                    aceptamos el presente contrato en todas y cada una de sus partes, declarando&nbsp;
+                    estar conformes y debidamente enterados&nbsp;
+                    de su redacción, obligándonos a su fiel y estricto cumplimiento, firmándolo&nbsp;
+                    en constancia en un original&nbsp;
+                    y dos copias de un mismo tenor y para un solo efecto.
+                </p>
+            @break
+
+            @default
+                <p class="text-parrafo-center" style="color:red">
+                    ERROR AL LISTAR CLIENTE
+                </p>
+        @endswitch
+
 
         <p class="text-parrafo-center">
             @php
@@ -211,29 +335,38 @@
             @endphp
             {{ $contrato_cliente->lugar_firma_contrato }} - {{ $carbon->format('d \\d\\e F \\d\\e Y') }}
         </p>
+        @switch($numbers_of_clients)
+            @case(1)
+                <div class="footer-page">
+                    <table>
+                        <tr>
+                            <td>
+                                <span
+                                    class="as-full text-bold">.........................................................................................</span>
+                                <span class="as-full text-bold">MIGUEL ANGEL GUZMAN CABRERA</span>
+                                <span class="as-full text-bold">EL ACREEDOR</span>
+                            </td>
+                            <td>
+                                <span
+                                    class="as-full text-bold">.........................................................................................</span>
+                                <span class="as-full text-bold">
+                                    {{ strtoupper($contrato_cliente->nombres) }}
+                                    {{ strtoupper($contrato_cliente->apellido_paterno) }}
+                                    {{ strtoupper($contrato_cliente->apellido_materno) }}
+                                </span>
+                                <span class="as-full text-bold">EL DEUDOR</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            @break
 
-        <div class="footer-page">
-            <table>
-                <tr>
-                    <td>
-                        <span
-                            class="as-full text-bold">.........................................................................................</span>
-                        <span class="as-full text-bold">MIGUEL ANGEL GUZMAN CABRERA</span>
-                        <span class="as-full text-bold">EL ACREEDOR</span>
-                    </td>
-                    <td>
-                        <span
-                            class="as-full text-bold">.........................................................................................</span>
-                        <span class="as-full text-bold">
-                            {{ strtoupper($contrato_cliente->nombres) }}
-                            {{ strtoupper($contrato_cliente->apellido_paterno) }}
-                            {{ strtoupper($contrato_cliente->apellido_materno) }}
-                        </span>
-                        <span class="as-full text-bold">EL DEUDOR</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
+            @default
+                <div class="footer-page" style="color:red">
+                    ERROR AL GENERAR NOMBRES PARA LAS FIRMAS
+                </div>
+        @endswitch
+
     </div>
 
 </body>

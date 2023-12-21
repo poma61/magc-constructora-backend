@@ -14,9 +14,10 @@ class DetalleContrato extends Model
         'n_de_uv',
         'zona',
         'terreno_superficie',
-        'terreno_valor_total_numeral',
-        'terreno_val_couta_inicial_numeral',
-        'terreno_val_couta_mensual_numeral',
+        'terreno_valor_total_numeral',//puede ser nulo
+        'terreno_valor_total_literal',//puede ser nulo
+        'terreno_val_couta_inicial_numeral',//puede ser nulo
+        'terreno_val_couta_mensual_numeral',//puede ser nulo
         'numero_distrito',
         'numero_identificacion_terreno',
         'norte_medida_terreno',
@@ -31,11 +32,12 @@ class DetalleContrato extends Model
         'construccion_superficie_terreno',
         'construccion_valor_total_literal',
         'construccion_valor_total_numeral',
+        'construccion_cantidad_meses_de_entrega',
         'construccion_val_couta_inicial_literal',
         'construccion_val_couta_inicial_numeral',
         'construccion_val_couta_mensual_literal',
         'construccion_val_couta_mensual_numeral',
-        'construccion_val_cantidad_couta_mensual',
+        'construccion_cantidad_couta_mensual',
         'primera_val_couta_mensual_numeral',
         'segunda_val_couta_mensual_numeral',
         'tercera_val_couta_mensual_numeral',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClienteRequest;
 use App\Http\Requests\DetalleCByContratoRequest;
 use App\Models\ClienteHasContrato;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class ContratoController extends Controller
             $desarrolladora = Desarrolladora::where('status', true)
                 ->where('nombres', $request->input('desarrolladora'))
                 ->first();
-               //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
+            //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
             if ($desarrolladora == null) {
                 return response()->json([
                     'records' => null,
@@ -61,14 +62,14 @@ class ContratoController extends Controller
         }
     }
 
-
     public function store(DetalleCByContratoRequest $request)
     {
         try {
+
             $desarrolladora = Desarrolladora::where('status', true)
                 ->where('nombres', $request->input('desarrolladora'))
                 ->first();
-               //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
+            //debemos verificar si la desarrolladora existe en la base de datos por seguridad y estabilidad del sistema
             if ($desarrolladora == null) {
                 return response()->json([
                     'records' => null,
@@ -98,8 +99,8 @@ class ContratoController extends Controller
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
 
-           //agregamos para enviar datos al frontend
-           $contrato['fecha_firma_contrato'] = $request->input('fecha_firma_contrato');
+            //agregamos para enviar datos al frontend
+            $contrato['fecha_firma_contrato'] = $request->input('fecha_firma_contrato');
 
             return response()->json([
                 'status' => true,
@@ -184,7 +185,6 @@ class ContratoController extends Controller
             ], 500);
         }
     }
-
 
     public function destroy(Request $request)
     {

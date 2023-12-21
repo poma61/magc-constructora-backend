@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->id();
             $table->string('n_contrato', 20);
-            $table->longText('descripcion');
+            $table->longText('descripcion')->nullable();
             $table->string('archivo_pdf')->nullable();
             $table->boolean('status');
             $table->timestamps();
