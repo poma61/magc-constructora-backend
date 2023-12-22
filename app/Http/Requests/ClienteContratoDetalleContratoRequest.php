@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
 //add
 use Illuminate\Contracts\Validation\Validator;
@@ -9,7 +8,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 
-class DetalleCByContratoRequest extends FormRequest
+
+class ClienteContratoDetalleContratoRequest extends FormRequest
 {
 
     public function authorize(): bool
@@ -124,9 +124,9 @@ class DetalleCByContratoRequest extends FormRequest
             'detalle_contrato.construccion_descripcion.required' => 'El campo descripción del inmueble, construcción es requerido.',
             'detalle_contrato.construccion_superficie_terreno.required' => 'El campo superficie del terreno, construcción es requerido.',
             'detalle_contrato.construccion_superficie_terreno.numeric' => 'El campo superficie del terreno, construcción debe ser un número.',
-            'detalle_contrato.construccion_valor_total_literal.required' => 'El campo valor total en literal de la construccion es requerido.',
-            'detalle_contrato.construccion_valor_total_numeral.required' => 'El campo valor total de la construccion es requerido.',
-            'detalle_contrato.construccion_valor_total_numeral.numeric' => 'El campo valor total de la construccion debe ser un número.',
+            'detalle_contrato.construccion_valor_total_literal.required' => 'El campo valor total en literal de la construcción es requerido.',
+            'detalle_contrato.construccion_valor_total_numeral.required' => 'El campo valor total de la construcción es requerido.',
+            'detalle_contrato.construccion_valor_total_numeral.numeric' => 'El campo valor total de la construcción debe ser un número.',
             'detalle_contrato.construccion_cantidad_meses_de_entrega.required' => 'El campo cantidad de meses de entrega, construcción es requerido.',
             'detalle_contrato.construccion_val_couta_inicial_literal.required' => 'El campo couta inicial en literal de la construcción es requerido.',
             'detalle_contrato.construccion_val_couta_inicial_numeral.required' => 'El campo couta inicial de la construcción es requerido.',
@@ -185,3 +185,4 @@ class DetalleCByContratoRequest extends FormRequest
         throw new HttpResponseException(response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 }//class
+

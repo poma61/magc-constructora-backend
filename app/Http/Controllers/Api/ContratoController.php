@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DetalleCByContratoRequest;
-use App\Models\Cliente;
-use App\Models\ClienteHasContrato;
 use Illuminate\Http\Request;
 //add
+use App\Http\Requests\ClienteContratoDetalleContratoRequest;
+use App\Models\Cliente;
+use App\Models\ClienteHasContrato;
 use App\Models\Desarrolladora;
 use App\Models\Contrato;
 use App\Models\DetalleContrato;
@@ -62,7 +62,7 @@ class ContratoController extends Controller
         }
     }
 
-    public function store(DetalleCByContratoRequest $request)
+    public function store(ClienteContratoDetalleContratoRequest $request)
     {
         try {
 
@@ -78,42 +78,57 @@ class ContratoController extends Controller
                 ], 404);
             }
 
-            $clients=$request->input('clients');
 
-            $cliente = new Cliente($clients[0]);
-            $cliente->id_desarrolladora = $desarrolladora->id;
-            $cliente->status = true;
-            $cliente->save();
+            $clients = $request->input('clients'); //es un array
+            //para crear un nuevo cliente
+            foreach ($clients as $client_data) {
+                $cliente = new Cliente($client_data);
+                $cliente->id_desarrolladora = $desarrolladora->id;
+                $cliente->status = true;
+                $cliente->save();
+                $registered_clients[] = $cliente;
+            }
 
-            return response()->json([
-                'status' => true,
-                'message' => "Contrato generado exitosamente!",
-                'records'=>$cliente,
-            ]);
-
-            //el $fillable del modelo son todos los campos que se insertan en la base de datos
-            //si el campo a insertar no esta listado en el array $fillable entonces
-            //ese campo no se insertara en la base de datos, aunque en $request->all() este ese campo
-            //ese campo sera omitido
-            $contrato = new Contrato($request->all());
+            $contrato = new Contrato($request->input('contrato'));
             $contrato->n_contrato = $this->generateNumContrato();
             $contrato->status = true;
             $contrato->save();
 
-            $detalle_contrato = new DetalleContrato($request->all());
+            $detalle_contrato = new DetalleContrato($request->input('detalle_contrato'));
             $detalle_contrato->status = true;
             $detalle_contrato->id_contrato = $contrato->id;
             $detalle_contrato->save();
 
-            $cliente_has_contrato = new ClienteHasContrato();
-            $cliente_has_contrato->id_contrato = $contrato->id;
-            $cliente_has_contrato->id_cliente = $request->input('id_cliente');
+            foreach ($registered_clients  as $client) {
+                $cliente_has_contrato = new ClienteHasContrato();
+                $cliente_has_contrato->id_contrato = $contrato->id;
+                $cliente_has_contrato->id_cliente = $client->id;
+                $cliente_has_contrato->save();
+            }
 
-            $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
+            //ahora creamos el archivo pdf
+            $contrato->archivo_pdf = $this->generatePdfContrato(
+                count($registered_clients),
+                $request->input('detalle_contrato.add_info_terreno'),
+                $contrato->id
+            );
             $contrato->update();
 
-            //agregamos para enviar datos al frontend
-            $contrato['fecha_firma_contrato'] = $request->input('fecha_firma_contrato');
+            $id_contrato = $contrato->id;
+            //no es necessatio verificar el 'status' de cad atabla ya que es creacion de un nuevo registro
+            $contrato = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
+                ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
+                ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
+                ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
+                ->select(
+                    'clientes.nombres',
+                    'clientes.apellido_paterno',
+                    'clientes.apellido_materno',
+                    'contratos.*',
+                    'detalle_contratos.fecha_firma_contrato'
+                )
+                ->where('contratos.id', $id_contrato)
+                ->first();
 
             return response()->json([
                 'status' => true,
@@ -159,9 +174,11 @@ class ContratoController extends Controller
         return  "{$num_result}/{$year}";
     }
 
-    public function update(DetalleCByContratoRequest $request,)
+    public function update(ClienteContratoDetalleContratoRequest $request,)
     {
         try {
+            //el update no esta hecho nada
+
             //el $fillable del modelo son todos los campos que se insertan en la base de datos
             //si el campo a insertar no esta listado en el array $fillable entonces
             //ese campo no se insertara en la base de datos, aunque en $request->all() este ese campo
@@ -175,7 +192,7 @@ class ContratoController extends Controller
             //obtenemos el path del pdf antiguo
             $antiguo_pdf_path = $contrato->archivo_pdf;
             //agregamos el nuevo archivo
-            $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
+            // $contrato->archivo_pdf = $this->generatePdfContrato(,$contrato->id);
             $contrato->update();
 
             // si todo es ok entonces eliminados el archivo pdf antiguo
@@ -243,7 +260,7 @@ class ContratoController extends Controller
         }
     }
 
-    public function generatePdfContrato(int $id)
+    public function generatePdfContrato(int $number_of_clients, string $add_info_terreno, int $id)
     {
         $contrato_cliente = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
             ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
@@ -263,7 +280,11 @@ class ContratoController extends Controller
             ->where('contratos.id', $id)
             ->first();
 
-        $pdf = PDF::loadView('pdf/contrato/contrato-pdf', ['contrato_cliente' => $contrato_cliente,]);
+        $pdf = PDF::loadView('pdf/contrato/contrato-pdf', [
+            'number_of_clients' => $number_of_clients,
+            'add_info_terreno' => $add_info_terreno,
+            'contrato_cliente' => $contrato_cliente
+        ]);
         //$pdf->setPaper((array(0, 0, 612.00, 1008.00)),'landscape');//oficio horizontal
         $pdf->setPaper('legal', 'portrait'); //ocicio  vertical
 

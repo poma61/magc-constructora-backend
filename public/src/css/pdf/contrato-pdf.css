@@ -38,6 +38,7 @@ body {
 
 .main-pdf .text-bold {
     font-weight: bold;
+    color:red;
 }
 
 .main-pdf .footer-page {
