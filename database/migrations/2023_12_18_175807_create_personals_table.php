@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('cargo', 250);
             $table->string('ci', 100);
             $table->string('ci_expedido', 10);
-            $table->string('telefono', 100);
-            $table->string('correo_electronico', 100);
+            $table->string('n_de_contacto', 100);
+            $table->string('correo_electronico', 100)->nullable();
             $table->text('direccion');
             $table->string('foto');
             $table->boolean('status');

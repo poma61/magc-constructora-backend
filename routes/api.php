@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\ContratoController;
 use App\Http\Controllers\Api\DesarrolladoraController;
 use App\Http\Controllers\Api\HistorialDePagoClienteController;
-
+use App\Http\Controllers\Api\PersonalController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -42,4 +42,12 @@ Route::prefix('/contrato')->middleware(['jwt'])->group(function () {
     Route::put('/edit-data', [ContratoController::class, 'update']);
     Route::post('/delete-data', [ContratoController::class, 'destroy']);
     Route::post('/see-detalle-contrato', [ContratoController::class, 'showDetalleContrato']);
+});
+
+Route::prefix('/personal')->middleware(['jwt'])->group(function () {
+    Route::post('/all-data', [PersonalController::class, 'index']);
+    Route::post('/new-data', [PersonalController::class, 'store']);
+    Route::put('/edit-data', [PersonalController::class, 'update']);
+    Route::post('/delete-data', [PersonalController::class, 'destroy']);
+    Route::post('/by-ci-personal', [PersonalController::class, 'recordByCi']);
 });

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
 use App\Models\Desarrolladora;
 use App\Models\Personal;
 use App\Models\Usuario;
@@ -29,8 +28,7 @@ class DatabaseSeeder extends Seeder
             'cargo' => 'Sin especificar',
             'ci' => 654321,
             'ci_expedido' => 'OR',
-            'telefono' => 1234567,
-            'correo_electronico' => "system@gmail.com",
+            'n_de_contacto' => 1234567,
             'direccion' => 'La Paz - Bolivia',
             'status' => true,
             'foto' => '/storage/img/personal/user.png',
@@ -44,4 +42,4 @@ class DatabaseSeeder extends Seeder
             'id_personal' => 1,
         ]);
     }
-}
+}//class

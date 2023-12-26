@@ -10,12 +10,13 @@ class AppServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        //
+        
     }
 
 
     public function boot(): void
     {
-        //Schema::defaultStringLength(400);
+        //define un tamaño del varchar como default
+        Schema::defaultStringLength(400);
     }
 }
