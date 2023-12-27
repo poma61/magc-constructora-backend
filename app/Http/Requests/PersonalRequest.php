@@ -38,7 +38,6 @@ class PersonalRequest extends FormRequest
             'ci_expedido' => 'required',
             'n_de_contacto' => 'required|numeric',
             'direccion' => 'required',
-            'email' => 'required|email',
         ];
         if ($this->isMethod('PUT')) {
             $rules['foto'] = 'sometimes|mimes:jpeg,png,jpg';
