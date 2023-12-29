@@ -38,12 +38,11 @@ body {
 
 .main-pdf .text-bold {
     font-weight: bold;
-    color:red;
 }
 
 .main-pdf .footer-page {
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     width: 100%;
 }
 
@@ -55,8 +54,40 @@ body {
     display: block;
     text-align: center;
     margin: 0px;
-    line-height: 1.5;
+    line-height: 1.5; /* espacio entre líneas */
     padding: 0px;
 }
 
+.as-mt-50 {
+    margin-top: 50px !important;
+}
 
+.as-mb-200 {
+    margin-bottom: 200px !important;
+}
+.content-table-coutas-mensuales {
+    width: 100%;
+    display: block;
+    /* page-break-before: always; para que la tabla se muestre en la siguiente pagina blanca */
+    page-break-before: always;
+}
+
+.table-coutas {
+    border-collapse: collapse;
+}
+
+.table-coutas tr td {
+    border: 1px solid #000;
+}
+
+.table-coutas tr th {
+    border: 1px solid #000;
+}
+
+.table-coutas tr td:nth-child(4) {
+    border: none;
+}
+
+.table-coutas tr th:nth-child(4) {
+    border: none;
+}

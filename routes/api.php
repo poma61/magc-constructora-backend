@@ -42,6 +42,7 @@ Route::prefix('/contrato')->middleware(['jwt'])->group(function () {
     Route::put('/edit-data', [ContratoController::class, 'update']);
     Route::post('/delete-data', [ContratoController::class, 'destroy']);
     Route::post('/see-detalle-contrato', [ContratoController::class, 'showDetalleContrato']);
+    Route::post('/actualizar-pdf', [ContratoController::class, 'updatePdfFile']);
 });
 
 Route::prefix('/personal')->middleware(['jwt'])->group(function () {
@@ -50,4 +51,5 @@ Route::prefix('/personal')->middleware(['jwt'])->group(function () {
     Route::put('/edit-data', [PersonalController::class, 'update']);
     Route::post('/delete-data', [PersonalController::class, 'destroy']);
     Route::post('/by-ci-personal', [PersonalController::class, 'recordByCi']);
+
 });

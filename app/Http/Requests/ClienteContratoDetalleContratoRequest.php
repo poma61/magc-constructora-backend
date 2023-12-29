@@ -61,61 +61,51 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             $rules['detalle_contrato.terreno_val_couta_inicial_numeral'] = 'required|numeric';
             $rules['detalle_contrato.terreno_val_couta_mensual_numeral'] = 'required|numeric';
         }
-        switch ($this->input('type_of_register_client')) {
-            case 'cliente-nuevo':
-                // Agregar reglas para cada cliente en el array
-                foreach ($this->input('clients', []) as $key => $client) {
-                    //clients=> es el nombre del array de objetos que se envia desde el frontend
-                    // esta validacion se agrega porque en el frontend se puede enviar un cliente ya registrado anteriormente gracias a la opcion "Cliente registrado"
-                    //donde se busca al cliente registrado por el CI;
-                    $rules["clients.{$key}.id"] = 'required';
-                    $rules["clients.{$key}.nombres"] = 'required';
-                    $rules["clients.{$key}.apellido_paterno"] = 'required';
-                    $rules["clients.{$key}.apellido_materno"] = 'required';
-                    $rules["clients.{$key}.n_de_contacto"] = 'required|numeric';
-                    $rules["clients.{$key}.ci"] = [
-                        'required',
-                        //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
-                        //aplicamos el ignore cuando sea un update ya que el ci puede ser el mismo porque es una actualizacion del registro
-                        //clientes=>es el nombre de la tabla de base de datos
-                        Rule::unique('clientes', 'ci')->where(function ($query) {
-                            $query->where('status', true);
-                        })->ignore($this->input("clients.{$key}.id")),
-                    ];
-                    $rules["clients.{$key}.ci_expedido"] = 'required';
-                    $rules["clients.{$key}.direccion"] = 'required';
-
-                    //empty => devuelve false cuando la variable NO esta vacia y/o null o cuando SI tiene contenido
-                    if (empty($this->input("clients.{$key}.correo_electronico")) == false) {
-                        $rules["clients.{$key}.correo_electronico"] = [
-                            'email',
+        //SOLO VALIDAMOS CUANDO ES UN NUEVO REGISTRO POR EL METODO POST 
+        if ($this->isMethod('POST')) {
+            switch ($this->input('type_of_register_client')) {
+                case 'cliente-nuevo':
+                    // Agregar reglas para cada cliente en el array
+                    foreach ($this->input('clients', []) as $key => $client) {
+                        //clients=> es el nombre del array de objetos que se envia desde el frontend
+                        // esta validacion se agrega porque en el frontend se puede enviar un cliente ya registrado anteriormente gracias a la opcion "Cliente registrado"
+                        //donde se busca al cliente registrado por el CI;
+                        $rules["clients.{$key}.id"] = 'required';
+                        $rules["clients.{$key}.nombres"] = 'required';
+                        $rules["clients.{$key}.apellido_paterno"] = 'required';
+                        $rules["clients.{$key}.apellido_materno"] = 'required';
+                        $rules["clients.{$key}.n_de_contacto"] = 'required|numeric';
+                        $rules["clients.{$key}.ci"] = [
+                            'required',
                             //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
                             //aplicamos el ignore cuando sea un update ya que el ci puede ser el mismo porque es una actualizacion del registro
-                            Rule::unique('clientes', 'correo_electronico')->where(function ($query) {
+                            //clientes=>es el nombre de la tabla de base de datos
+                            Rule::unique('clientes', 'ci')->where(function ($query) {
                                 $query->where('status', true);
                             })->ignore($this->input("clients.{$key}.id")),
                         ];
+                        $rules["clients.{$key}.ci_expedido"] = 'required';
+                        $rules["clients.{$key}.direccion"] = 'required';
                     }
-                }
-                break;
-            case 'cliente-registrado':
-                // Agregar reglas para cada cliente en el array
-                foreach ($this->input('clients', []) as $key => $client) {
-                    //clients=> es el nombre del array de objetos que se envia desde el frontend
-                    // esta validacion se agrega porque en el frontend se puede enviar un cliente ya registrado anteriormente gracias a la opcion "Cliente registrado"
-                    //donde se busca al cliente registrado por el CI;
-                    $rules["clients.{$key}.id"] = 'required';
-                    $rules["clients.{$key}.nombres"] = 'required';
-                    $rules["clients.{$key}.apellido_paterno"] = 'required';
-                    $rules["clients.{$key}.apellido_materno"] = 'required';
-                    $rules["clients.{$key}.ci"] = 'required';
-                }
-                break;
-            default:
-                $rules['type_of_register_client'] = 'required';
-                break;
+                    break;
+                case 'cliente-registrado':
+                    // Agregar reglas para cada cliente en el array
+                    foreach ($this->input('clients', []) as $key => $client) {
+                        //clients=> es el nombre del array de objetos que se envia desde el frontend
+                        // esta validacion se agrega porque en el frontend se puede enviar un cliente ya registrado anteriormente gracias a la opcion "Cliente registrado"
+                        //donde se busca al cliente registrado por el CI;
+                        $rules["clients.{$key}.id"] = 'required';
+                        $rules["clients.{$key}.nombres"] = 'required';
+                        $rules["clients.{$key}.apellido_paterno"] = 'required';
+                        $rules["clients.{$key}.apellido_materno"] = 'required';
+                        $rules["clients.{$key}.ci"] = 'required';
+                    }
+                    break;
+                default:
+                    $rules['type_of_register_client'] = 'required';
+                    break;
+            }
         }
-
         return $rules;
     }
 
@@ -187,6 +177,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             $messages["clients.{$key}.apellido_materno"] = 'El campo apellido materno es requerido.';
             $messages["clients.{$key}.n_de_contacto"] = 'El campo n° de contacto es requerido.';
             $messages["clients.{$key}.ci.required"] = 'El campo ci es requerido.';
+            $messages["clients.{$key}.ci.unique"] = 'El campo ci ya ha sido tomado.';
             $messages["clients.{$key}.ci_expedido.required"] = 'El campo expedido es requerido.';
             $messages["clients.{$key}.direccion.required"] = 'El campo direccion es requerido.';
             $messages["clients.{$key}.correo_electronico.email"] = 'El formato del correo electronico no es válido.';
