@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PersonalRequest;
 use App\Models\Desarrolladora;
 use App\Models\Personal;
-use App\Models\Sucursal;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 

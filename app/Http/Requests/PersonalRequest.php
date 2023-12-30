@@ -8,8 +8,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
-use App\Models\Empresa;
-use Illuminate\Support\Facades\DB;
 
 class PersonalRequest extends FormRequest
 {

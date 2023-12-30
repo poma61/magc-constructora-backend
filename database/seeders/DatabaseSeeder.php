@@ -5,7 +5,9 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Desarrolladora;
 use App\Models\Personal;
+use App\Models\Role;
 use App\Models\Usuario;
+use App\Models\UsuarioRole;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -40,6 +42,19 @@ class DatabaseSeeder extends Seeder
             'status' => true,
             'password' => '$2y$10$jjDb4siaEWs3Iw.sFqFwquRENoM/Lsi.IK6WL5L9fXF/x1GXKPfFq', //1234
             'id_personal' => 1,
+        ]);
+
+        Role::create([
+            'rol_name' => 'administrador',
+        ]);
+        Role::create([
+            'rol_name' => 'usuario',
+        ]);
+
+        UsuarioRole::create([
+         'id_user'=>1,
+         'id_role'=>1,
+         'status'=>true,
         ]);
     }
 }//class
