@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AuthProfileRequest;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 //add
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Throwable;
 
 class AuthController extends Controller
@@ -63,19 +66,48 @@ class AuthController extends Controller
     public function me()
     {
         try {
-            return response()->json(
-                [
-                    'user' => Auth::user(),
-                    'status' => true,
-                    'message' => 'OK',
-                ]
-
-            );
+            return response()->json([
+                'record' => Auth::user()->isPersonal(),
+                'status' => true,
+                'message' => 'OK',
+            ], 200);
         } catch (Throwable $th) {
             return response()->json([
-                'user' => null,
+                'record' => null,
                 'status' => false,
                 'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateCredentials(AuthProfileRequest $request)
+    {
+        try {
+            $user = Usuario::where('id', Auth::user()->id)
+                ->where('status', true)
+                ->first();
+
+            if ($user == null) {
+                return response()->json([
+                    'record' => $user,
+                    'message' => 'No se pudo encontrar el usuario!',
+                    'status' => false,
+                ], 404);
+            } else {
+                $user->user = $request->input('user');
+                $user->password = Hash::make($request->input('new_password'));
+                $user->update();
+                return response()->json([
+                    'record' => $user,
+                    'message' => 'Credenciales actualizados!',
+                    'status' => true,
+                ], 200);
+            }
+        } catch (Throwable $th) {
+            return response()->json([
+                'record' => [],
+                'message' => $th->getMessage(),
+                'status' => false,
             ], 500);
         }
     }

@@ -34,8 +34,6 @@ class PersonalRequest extends FormRequest
                 })->ignore($this->input('id')),
             ],
             'ci_expedido' => 'required',
-            'n_de_contacto' => 'required|numeric',
-            'direccion' => 'required',
         ];
         if ($this->isMethod('PUT')) {
             $rules['foto'] = 'sometimes|mimes:jpeg,png,jpg';
@@ -55,6 +53,11 @@ class PersonalRequest extends FormRequest
             ];
         }
 
+        //empty => devuelve false cuando la variable NO esta vacia y/o null o cuando SI tiene contenido
+        if (empty($this->input('n_de_contacto')) == false) {
+            $rules['n_de_contacto'] = 'numeric';
+        }
+
 
         return $rules;
     }
@@ -63,7 +66,7 @@ class PersonalRequest extends FormRequest
     {
         $response = [
             'status' => false,
-            'message' => 'Verificar los campos!',
+            'message' => 'Verificar los campos solicitados!',
             'message_errors' => $validator->errors(),
         ];
         throw  new HttpResponseException(response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY));

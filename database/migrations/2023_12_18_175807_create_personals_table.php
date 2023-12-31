@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('cargo', 250);
             $table->string('ci', 100);
             $table->string('ci_expedido', 10);
-            $table->string('n_de_contacto', 100);
+            $table->string('n_de_contacto', 100)->nullable();
             $table->string('correo_electronico', 100)->nullable();
-            $table->text('direccion');
+            $table->text('direccion')->nullable();
             $table->string('foto');
             $table->boolean('status');
             $table->foreignId('id_desarrolladora');
@@ -30,7 +30,6 @@ return new class extends Migration
             $table->foreign('id_desarrolladora')->references('id')->on('desarrolladoras');
         });
     }
-
 
     public function down(): void
     {

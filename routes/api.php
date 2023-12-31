@@ -14,6 +14,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::prefix('/auth')->middleware(['jwt'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/me', [AuthController::class, 'me']);
+    Route::post('/actualizar-credenciales', [AuthController::class, 'updateCredentials']);
 });
 
 Route::prefix('/desarrolladora')->middleware(['jwt'])->group(function () {
