@@ -39,11 +39,8 @@ class ContratoController extends Controller
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
-                    'clientes.n_de_contacto',
                     'clientes.ci',
                     'clientes.ci_expedido',
-                    'clientes.direccion',
-                    'clientes.descripcion',
                     'contratos.*',
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
@@ -162,11 +159,8 @@ class ContratoController extends Controller
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
-                    'clientes.n_de_contacto',
                     'clientes.ci',
                     'clientes.ci_expedido',
-                    'clientes.direccion',
-                    'clientes.descripcion',
                     'contratos.*',
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
@@ -208,8 +202,8 @@ class ContratoController extends Controller
             if ($request_detalle_contrato['add_info_terreno']) {
                 $detalle_contrato->update($request_detalle_contrato);
             } else {
-                // en caso de que esttos campos se hayan llenado anteriormente
-                //y se requiera quitar la informacion adicoonal del terreno entonces asignamos nulo
+                // en caso de que estos campos se hayan llenado anteriormente
+                //y se requiera quitar la informacion adicional del terreno entonces asignamos nulo
                 $detalle_contrato->fill($request_detalle_contrato);
                 $detalle_contrato->terreno_valor_total_numeral = null;
                 $detalle_contrato->terreno_valor_total_literal = null;
@@ -218,7 +212,9 @@ class ContratoController extends Controller
                 $detalle_contrato->update();
             }
 
-            //ahora modificamos el archivo pdf
+            //ahora modificamos el archivo pdf y eliminamos el antiguo pdf
+            $parse_path_archivo_pdf = str_replace("/storage", "", $contrato->archivo_pdf);
+            Storage::disk('public')->delete($parse_path_archivo_pdf);
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
 
@@ -232,11 +228,8 @@ class ContratoController extends Controller
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
-                    'clientes.n_de_contacto',
                     'clientes.ci',
                     'clientes.ci_expedido',
-                    'clientes.direccion',
-                    'clientes.descripcion',
                     'contratos.*',
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
@@ -359,7 +352,7 @@ class ContratoController extends Controller
         //debemos parsear el numero de contrato porque tiene el formato '2023/0001_LP' 
         // no se puede guardar archivos con ese tipo de nombre entonces  obtenemos el nombre de este formato '2023_0001_LP'
         $n_contrato_parse = str_replace('/', '_', $contrato_cliente[0]->n_contrato);
-        $pdf_path = "pdf/contrato/{$n_contrato_parse}-{$contrato_cliente[0]->nombres}-{$contrato_cliente[0]->apellido_paterno}-{$contrato_cliente[0]->apellido_materno}-" . uniqid() . ".pdf";
+        $pdf_path = "pdf/contrato/{$n_contrato_parse}_{$contrato_cliente[0]->nombres}_{$contrato_cliente[0]->apellido_paterno}_{$contrato_cliente[0]->apellido_materno}_" . uniqid() . ".pdf";
 
         Storage::disk('public')->put($pdf_path,  $pdf->download()->getOriginalContent());
         return  "/storage/{$pdf_path}";
@@ -372,15 +365,19 @@ class ContratoController extends Controller
         //generar el archivo pdf
         try {
             $contrato = Contrato::where('id', $request->input('id_contrato')) //accedemos asi porque es un array
+                ->select()
                 ->where('status', true)
                 ->first();
-            //ahora actualizamos el archivo pdf
+
+            //ahora actualizamos el archivo pdf y eliminamos el archivo pdf anterior
+            $parse_path_archivo_pdf = str_replace("/storage", "", $contrato->archivo_pdf);
+            Storage::disk('public')->delete($parse_path_archivo_pdf);
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
             return response()->json([
                 'status' => true,
                 'message' => "Archivo pdf actualizado!",
-                'record' => $contrato,
+                'record' => ['archivo_pdf' => $contrato->archivo_pdf],
             ], 200);
         } catch (Throwable $th) {
             return response()->json([

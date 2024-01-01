@@ -87,7 +87,6 @@ class DesarrolladoraController extends Controller
     public function destroy(Request $request)
     {
         try {
-
             $desarrolladora = Desarrolladora::where('status', true)->where('id', $request->input('id'))->first();
             $desarrolladora->status = false;
             $desarrolladora->update();

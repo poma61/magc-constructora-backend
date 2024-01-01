@@ -18,9 +18,9 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
         return true;
     }
 
-
     public function rules(): array
     {
+
         $rules = [
             //contratos => ningun campo es necesario
 
@@ -48,7 +48,18 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.construccion_val_couta_inicial_numeral' => 'required|numeric',
             'detalle_contrato.construccion_val_couta_mensual_literal' => 'required',
             'detalle_contrato.construccion_val_couta_mensual_numeral' => 'required|numeric',
-            'detalle_contrato.construccion_cantidad_couta_mensual' => 'required|numeric',
+            'detalle_contrato.fecha_cancelacion_coutas' => [
+                'required',
+                'date',
+                function ($attribute, $value, $fail) {
+                    $fecha = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+                    // Verificar que el día no sea 28, 30 ni 31
+                    if (in_array($fecha->day, [28, 29, 30, 31])) {
+                        $fail('Selecciona una fecha válida, evitando los días 28, 29, 30 y 31.');
+                    }
+                },
+            ],
+            'detalle_contrato.cantidad_couta_mensual' => 'required|numeric',
             'detalle_contrato.primera_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.segunda_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.tercera_val_couta_mensual_numeral' => 'required|numeric',
@@ -67,6 +78,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                 case 'cliente-nuevo':
                     // Agregar reglas para cada cliente en el array
                     foreach ($this->input('clients', []) as $key => $client) {
+                        //verificar que ningun campo 
                         //clients=> es el nombre del array de objetos que se envia desde el frontend
                         // esta validacion se agrega porque en el frontend se puede enviar un cliente ya registrado anteriormente gracias a la opcion "Cliente registrado"
                         //donde se busca al cliente registrado por el CI;
@@ -106,6 +118,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                     break;
             }
         }
+
         return $rules;
     }
 
@@ -143,10 +156,14 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.construccion_val_couta_inicial_numeral.required' => 'El campo couta inicial de la construcción es requerido.',
             'detalle_contrato.construccion_val_couta_inicial_numeral.numeric' => 'El campo couta inicial de la construcción debe ser un número.',
             'detalle_contrato.construccion_val_couta_mensual_literal.required' => 'El campo couta mensual en literal de la construcción es requerido.',
-            'detalle_contrato.construccion_val_couta_mensual_numeral.required' => 'El campo  couta mensual de la construcción es requerido.',
+            'detalle_contrato.construccion_val_couta_mensual_numeral.required' => 'El campo couta mensual en numeral de la construcción es requerido.',
             'detalle_contrato.construccion_val_couta_mensual_numeral.numeric' => 'El campo  couta mensual de la construcción debe ser un número.',
-            'detalle_contrato.construccion_cantidad_couta_mensual.required' => 'El campo cantidad de meses, couta mensual, construcción es requerido.',
-            'detalle_contrato.construccion_cantidad_couta_mensual.numeric' => 'El campo cantidad de meses, couta mensual, construcción debe ser un número.',
+            'detalle_contrato.fecha_cancelacion_coutas.required' => 'El campo fecha de cancelacion de coutas es requerido.',
+            'detalle_contrato.fecha_cancelacion_coutas.date' => 'El campo fecha de cancelacion de coutas no es una fecha válida.',
+            'detalle_contrato.fecha_cancelacion_coutas.after_or_equal' => 'El campo fecha de cancelacion de coutas debe ser una fecha después o igual a :date.',
+            'detalle_contrato.fecha_cancelacion_coutas.before_or_equal' => 'El campo fecha de cancelacion de coutas debe ser una fecha antes o igual a :date.',
+            'detalle_contrato.cantidad_couta_mensual.required' => 'El campo cantidad de meses de coutas mensuales es requerido.',
+            'detalle_contrato.cantidad_couta_mensual.numeric' => 'El campo cantidad de meses de coutas mensuales debe ser un número.',
             'detalle_contrato.primera_val_couta_mensual_numeral.required' => 'El campo primera couta mensual es requerido.',
             'detalle_contrato.primera_val_couta_mensual_numeral.numeric' => 'El campo primera couta mensual debe ser un número.',
             'detalle_contrato.segunda_val_couta_mensual_numeral.required' => 'El campo segunda couta mensual es requerido.',

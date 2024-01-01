@@ -48,10 +48,11 @@ return new class extends Migration
             $table->string('construccion_val_couta_inicial_literal');
             $table->double('construccion_val_couta_inicial_numeral', 40, 2);
 
-            $table->integer('construccion_cantidad_couta_mensual');
+            $table->integer('cantidad_couta_mensual');
             $table->string('construccion_val_couta_mensual_literal');
             $table->double('construccion_val_couta_mensual_numeral', 40, 2);
-          
+            $table->date('fecha_cancelacion_coutas');
+
 
             //las tres primeras coutas son editables
             //para visualizar el la tabla del contrato que se generara
