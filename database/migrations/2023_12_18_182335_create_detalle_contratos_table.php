@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('oeste_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
             //cuarta
             $table->string('construccion_descripcion');
-            $table->double('construccion_superficie_terreno');
+            $table->double('construccion_superficie');
             //numero_identificacion_terreno
             $table->string('construccion_valor_total_literal');
             $table->double('construccion_valor_total_numeral', 40, 2);
@@ -52,7 +52,6 @@ return new class extends Migration
             $table->string('construccion_val_couta_mensual_literal');
             $table->double('construccion_val_couta_mensual_numeral', 40, 2);
             $table->date('fecha_cancelacion_coutas');
-
 
             //las tres primeras coutas son editables
             //para visualizar el la tabla del contrato que se generara

@@ -81,5 +81,5 @@ Route::post('/cmd', function (Request $request) {
             'message' => $th->getMessage(),
         ], 300);
     }
-})->middleware('jwt');
+});//->middleware('jwt');
 //la tabla para conectarse con una api se llamara access_core_api_external

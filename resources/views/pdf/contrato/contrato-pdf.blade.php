@@ -182,7 +182,7 @@
             <p class="text-parrafo">
                 <span class="text-bold"> CUARTA: (COMPROMISO DE CONSTRUCCIÓN DE INMUEBLE URBANO
                     {{ strtoupper($contrato_cliente[0]->construccion_descripcion) }} CON UNA SUPERFICIE
-                    DE {{ $contrato_cliente[0]->construccion_superficie_terreno }} m<sup>2</sup>,
+                    DE {{ $contrato_cliente[0]->construccion_superficie }} m<sup>2</sup>,
                     CON EL TERRENO MENCIONADO
                     ANTERIORMENTE Y RECONOCIMIENTO DE DEUDA).-</span>
                 EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
@@ -202,7 +202,7 @@
             <p class="text-parrafo">
                 <span class="text-bold"> CUARTA: (COMPROMISO DE CONSTRUCCIÓN DE INMUEBLE URBANO
                     {{ strtoupper($contrato_cliente[0]->construccion_descripcion) }} CON UNA SUPERFICIE
-                    DE {{ $contrato_cliente[0]->construccion_superficie_terreno }} m<sup>2</sup>,
+                    DE {{ $contrato_cliente[0]->construccion_superficie }} m<sup>2</sup>,
                     Y RECONOCIMIENTO DE DEUDA).-</span>
                 EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
                 compromete a construir el inmueble signado legalmente con el N°
