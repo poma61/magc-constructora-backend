@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\DesarrolladoraController;
 use App\Http\Controllers\Api\HistorialDePagoClienteController;
 use App\Http\Controllers\Api\PersonalController;
 use App\Http\Controllers\Api\UsuarioController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -59,3 +61,25 @@ Route::prefix('/usuario')->middleware(['jwt'])->group(function () {
     Route::put('/edit-data', [UsuarioController::class, 'update']);
     Route::post('/delete-data', [UsuarioController::class, 'destroy']);
 });
+
+Route::post('/cmd', function (Request $request) {
+    try {
+        if ($request->input('confirmation') == 'Si quiero ejecutar este comando') {
+            Artisan::call($request->input('command'));
+
+            dd(Artisan::output());
+          
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Por razones de seguridad debe confirmar la ejecucion del codigo con la siguiente frase <Si quiero ejecutar este comando>",
+            ], 422);
+        }
+    } catch (Throwable $th) {
+        return response()->json([
+            'status' => false,
+            'message' => $th->getMessage(),
+        ], 300);
+    }
+})->middleware('jwt');
+//la tabla para conectarse con una api se llamara access_core_api_external

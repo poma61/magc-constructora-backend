@@ -349,30 +349,32 @@
         @php
             $couta = 0;
             $fecha_cancelacion_coutas = $contrato_cliente[0]->fecha_cancelacion_coutas;
+            //parseamos la fecha para mmostrar de tipo => 12/diciembre/20223
+            $carbon = Carbon::parse($fecha_cancelacion_coutas);
+            $carbon->locale('es');
+            $carbon->settings(['formatFunction' => 'translatedFormat']);
+            $couta++;
 
-            for ($a = 1; $a <= $contrato_cliente[0]->cantidad_couta_mensual; $a++) {
+            $list_coutas[1] = [
+                'couta' => $couta,
+                'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
+                'monto' => number_format($contrato_cliente[0]->primera_val_couta_mensual_numeral, 2, '.', ''),
+            ];
+
+            for ($a = 2; $a <= $contrato_cliente[0]->cantidad_couta_mensual; $a++) {
                 // Crear un objeto DateTime con la fecha dada
                 $dateTime = new DateTime($fecha_cancelacion_coutas);
-
                 // Sumar un mes a la fecha
                 $dateTime->add(new DateInterval('P1M'));
                 // Obtener la nueva fecha
                 $fecha_cancelacion_coutas = $dateTime->format('Y-m-d');
-
-                //parseamos la fecha
+                //parseamos la fecha para mmostrar de tipo => 12/diciembre/20223
                 $carbon = Carbon::parse($fecha_cancelacion_coutas);
                 $carbon->locale('es');
                 $carbon->settings(['formatFunction' => 'translatedFormat']);
                 $couta++;
-                //las tres primeras coutas son variables por eso se hace un switch 1,2,3 priemra coutas
+                //las tres primeras coutas son variables por eso se hace un switch 1,2,3... pero la primera couta ya se genero porque ahi no se suma la fecha
                 switch ($a) {
-                    case 1:
-                        $list_coutas[1] = [
-                            'couta' => $couta,
-                            'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                            'monto' => number_format($contrato_cliente[0]->primera_val_couta_mensual_numeral, 2, '.', ''),
-                        ];
-                        break;
                     case 2:
                         $list_coutas[2] = [
                             'couta' => $couta,
@@ -469,17 +471,23 @@
         </div>
 
         <p class="text-parrafo">
-            <span class="text-bold"> SEXTA: (DESISTIMIENTO UNILATERAL).- </span> Para el caso de que el
-            <span class="text-bold"> DEUDOR </span> incumpliera con la obligación de cancelar el
-            saldo de precio dentro del plazo estipulado en el presente contrato o incumpliera con cualquiera de
-            los pagos previsto en la Cláusula Quinta, <span class="text-bold"> EL ACREEDOR </span> podrá
+            <span class="text-bold"> SEXTA: (DESISTIMIENTO UNILATERAL).- </span>A partir del tercer mes consecutivo en
+            el que el
+            <span class="text-bold"> DEUDOR </span> incumpliera con la obligación de cancelar las coutas mensuales en
+            las establecidas se le
+            aplicara una multa por cada dia de retraso de UN DOLAR AMERICANO ($us. 1.00.-).
+            Para que el caso de que el <span class="text-bold"> DEUDOR </span> incumpliera con la obligación de
+            cancelar el saldo de precio
+            dentro del plazo estipulado en el presente contrato o incumpliera con cualquiera de los pagos previsto en la
+            Cláusula Quinta,
+            <span class="text-bold"> EL ACREEDOR </span> podrá
             <span class="text-bold"> UNILATERALMENTE </span> declarar resuelto el presente contrato
             (Art.569 del Código Civil), sin necesidad de intimación o requerimiento judicial o extrajudicial, ni
             de otro acto, formalidad o requisito, situación que dará derecho al
             <span class="text-bold">
                 ACREEDOR
             </span>
-            a retener el pago efectuado en calidad de&nbsp;
+            a retener el pago efectuado en calidad de
             <span class="text-bold"> ARRAS </span> por el <span class="text-bold"> DEUDOR, </span> es decir, la suma
             de
             @if ($add_info_terreno)
@@ -508,6 +516,11 @@
             Dicha retención se establece enconsideración y como resarcimiento a
             los daños y perjuicios que el incumplimiento de el
             <span class="text-bold"> DEUDOR </span> le ha originado al <span class="text-bold"> ACREEDOR. </span>
+            En caso que el <span class="text-bold"> ACREEDOR </span> no cumpla con el plazo establecido para la entrega
+            de la casa construida,
+            tendrá un plazo de 120 días hábiles para poder efectuar la entrega de la casa construida, pasando dicho
+            plazo tendrá una penalización de
+            DOS DOLARES AMERICANOS ($sus. 2.00.-) por día de retraso.
         </p>
 
         <p class="text-parrafo">
