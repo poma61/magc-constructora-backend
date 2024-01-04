@@ -42,6 +42,7 @@ class DetalleContrato extends Model
         'primera_val_couta_mensual_numeral',
         'segunda_val_couta_mensual_numeral',
         'tercera_val_couta_mensual_numeral',
+        'cuarta_val_couta_mensual_numeral',
         'lugar_firma_contrato',
         'fecha_firma_contrato',
         'id_contrato',

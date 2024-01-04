@@ -63,6 +63,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.primera_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.segunda_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.tercera_val_couta_mensual_numeral' => 'required|numeric',
+            'detalle_contrato.cuarta_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.lugar_firma_contrato' => 'required',
             'detalle_contrato.fecha_firma_contrato' => 'required|date',
         ];
@@ -170,6 +171,8 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.segunda_val_couta_mensual_numeral.numeric' => 'El campo segunda couta mensual debe ser un número.',
             'detalle_contrato.tercera_val_couta_mensual_numeral.required' => 'El campo tercera couta mensual es requerido.',
             'detalle_contrato.tercera_val_couta_mensual_numeral.numeric' => 'El campo tercera couta mensual debe ser un número.',
+            'detalle_contrato.cuarta_val_couta_mensual_numeral.required' => 'El campo cuarta couta mensual es requerido.',
+            'detalle_contrato.cuarta_val_couta_mensual_numeral.numeric' => 'El campo cuarta couta mensual debe ser un número.',
             'detalle_contrato.lugar_firma_contrato.required' => 'El campo lugar de la firma del contrato es requerido.',
             'detalle_contrato.fecha_firma_contrato.required' => 'El campo fecha de la firma del contrato es requerido.',
             'detalle_contrato.fecha_firma_contrato.date' => 'El campo fecha de la firma del contrato no es una fecha válida',

@@ -58,6 +58,7 @@ return new class extends Migration
             $table->double('primera_val_couta_mensual_numeral', 40, 2); //verificar si aumentar la palabra 'construccion'
             $table->double('segunda_val_couta_mensual_numeral', 40, 2);
             $table->double('tercera_val_couta_mensual_numeral', 40, 2);
+            $table->double('cuarta_val_couta_mensual_numeral', 40, 2);
             //sexta
             //construccion_valor_couta_inicial_numeral
             //construccion_valor_couta_inicial_literal

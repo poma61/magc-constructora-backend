@@ -111,7 +111,7 @@
                     y con una suma de
                     <span class="text-bold">
                         {{ $contrato_cliente[0]->terreno_valor_total_literal }}
-                        ($us. {{ number_format($contrato_cliente[0]->terreno_valor_total_numeral, 2, '.', '') }})
+                        ($us. {{ number_format($contrato_cliente[0]->terreno_valor_total_numeral, 2, '.', ',') }})
                     </span>
                     Distrito <span class="text-bold"> {{ $contrato_cliente[0]->numero_distrito }}, </span> que a la
                     fecha se encuentra registrado en Derechos
@@ -194,7 +194,7 @@
                     {{-- la libreria Numero a Letras devulve el numero  en mayusculas --}}
                     {{ ucwords(strtolower($numero_a_letras->toInvoice($valor_total_construccion_add_terreno, 2))) }}
                     Dólares Americanos
-                    ($us. {{ number_format($valor_total_construccion_add_terreno, 2, '.', '') }}.-).
+                    ($us. {{ number_format($valor_total_construccion_add_terreno, 2, '.', ',') }}.-).
                 </span>
             </p>
         @else
@@ -209,7 +209,7 @@
                 <span class="text-bold"> {{ $contrato_cliente[0]->numero_identificacion_terreno }}, </span> señalado
                 en las cláusulas segunda y tercera del presente documento, por el valor de la suma de
                 <span class="text-bold"> {{ $contrato_cliente[0]->construccion_valor_total_literal }}
-                    ($us. {{ number_format($contrato_cliente[0]->construccion_valor_total_numeral, 2, '.', '') }}.-).
+                    ($us. {{ number_format($contrato_cliente[0]->construccion_valor_total_numeral, 2, '.', ',') }}.-).
                 </span>
             </p>
         @endif
@@ -245,13 +245,13 @@
                     {{-- la libreria Numero a Letras devulve el numero  en mayusculas --}}
                     {{ ucwords(strtolower($numero_a_letras->toInvoice($valor_total_construccion_add_terreno, 2))) }}
                     Dólares Americanos
-                    ($us. {{ number_format($valor_total_construccion_add_terreno, 2, '.', '') }}.-).
+                    ($us. {{ number_format($valor_total_construccion_add_terreno, 2, '.', ',') }}.-).
                 </span>
             @else
                 {{-- si no hay informaciona adicional del terreno solo mostramos valor total de la construccion --}}
                 <span class="text-bold">
                     {{ $contrato_cliente[0]->construccion_valor_total_literal }}
-                    ($us. {{ number_format($contrato_cliente[0]->construccion_valor_total_numeral, 2, '.', '') }}.-).
+                    ($us. {{ number_format($contrato_cliente[0]->construccion_valor_total_numeral, 2, '.', ',') }}.-).
                 </span>
             @endif
 
@@ -287,7 +287,7 @@
                     {{-- strtolower=> convierte de mayusculas a minusculas,ucwords=> convierte la primera letra en mayusculas de cada palabra --}}
                     {{-- la libreria Numero a Letras devulve el numero  en mayusculas --}}
                     ($us.
-                    {{ number_format($couta_inicial_construccion_add_terreno, 2, '.', '') }})
+                    {{ number_format($couta_inicial_construccion_add_terreno, 2, '.', ',') }})
                     {{ ucwords(strtolower($numero_a_letras->toInvoice($couta_inicial_construccion_add_terreno, 2))) }}
                     Dólares Americanos
                 </span>
@@ -295,7 +295,7 @@
                 {{-- si no hay informacion adicional del terreno solo mostramos la couta inicial de la construccion --}}
                 <span class="text-bold">
                     ($us.
-                    {{ number_format($contrato_cliente[0]->construccion_val_couta_inicial_numeral, 2, '.', '') }})
+                    {{ number_format($contrato_cliente[0]->construccion_val_couta_inicial_numeral, 2, '.', ',') }})
                     {{ $contrato_cliente[0]->construccion_val_couta_inicial_literal }}
                 </span>
             @endif
@@ -318,14 +318,14 @@
                     {{-- la libreria Numero a Letras devulve el numero  en mayusculas --}}
                     {{ ucwords(strtolower($numero_a_letras->toInvoice($couta_mensual_construccion_add_terreno, 2))) }}
                     Dólares Americanos
-                    ($us. {{ number_format($couta_mensual_construccion_add_terreno, 2, '.', '') }})
+                    ($us. {{ number_format($couta_mensual_construccion_add_terreno, 2, '.', ',') }})
                 </span>
             @else
                 {{-- si no hay informacion adicional del terreno solo mostramos la couta mensual del terreno --}}
                 <span class="text-bold">
                     {{ $contrato_cliente[0]->construccion_val_couta_mensual_literal }}
                     ($us.
-                    {{ number_format($contrato_cliente[0]->construccion_val_couta_mensual_numeral, 2, '.', '') }})
+                    {{ number_format($contrato_cliente[0]->construccion_val_couta_mensual_numeral, 2, '.', ',') }})
                 </span>
             @endif
 
@@ -358,7 +358,7 @@
             $list_coutas[1] = [
                 'couta' => $couta,
                 'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                'monto' => number_format($contrato_cliente[0]->primera_val_couta_mensual_numeral, 2, '.', ''),
+                'monto' => number_format($contrato_cliente[0]->primera_val_couta_mensual_numeral, 2, '.', ','),
             ];
 
             for ($a = 2; $a <= $contrato_cliente[0]->cantidad_couta_mensual; $a++) {
@@ -373,13 +373,13 @@
                 $carbon->locale('es');
                 $carbon->settings(['formatFunction' => 'translatedFormat']);
                 $couta++;
-                //las tres primeras coutas son variables por eso se hace un switch 1,2,3... pero la primera couta ya se genero porque ahi no se suma la fecha
+                //las cuatro primeras coutas son variables por eso se hace un switch 1,2,3,4... pero la primera couta ya se genero donde no se suma la fecha
                 switch ($a) {
                     case 2:
                         $list_coutas[2] = [
                             'couta' => $couta,
                             'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                            'monto' => number_format($contrato_cliente[0]->segunda_val_couta_mensual_numeral, 2, '.', ''),
+                            'monto' => number_format($contrato_cliente[0]->segunda_val_couta_mensual_numeral, 2, '.', ','),
                         ];
                         break;
 
@@ -390,6 +390,13 @@
                             'monto' => number_format($contrato_cliente[0]->tercera_val_couta_mensual_numeral, 2, '.', ''),
                         ];
                         break;
+                    case 4:
+                        $list_coutas[4] = [
+                            'couta' => $couta,
+                            'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
+                            'monto' => number_format($contrato_cliente[0]->cuarta_val_couta_mensual_numeral, 2, '.', ''),
+                        ];
+                        break;
                     default:
                         if ($add_info_terreno) {
                             //si hay informacion adicional del terreno sumamos couta mensual de la construccion y couta mensual del tereno
@@ -397,7 +404,7 @@
                             $list_coutas[$a] = [
                                 'couta' => $couta,
                                 'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                                'monto' => number_format($couta_mensual_construccion_add_terreno, 2, '.', ''),
+                                'monto' => number_format($couta_mensual_construccion_add_terreno, 2, '.', ','),
                             ];
                         } else {
                             //si no hay informacion adicional del terreno solo llenamos a la lista de coutas mensuales
@@ -405,10 +412,9 @@
                             $list_coutas[$a] = [
                                 'couta' => $couta,
                                 'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                                'monto' => number_format($contrato_cliente[0]->construccion_val_couta_mensual_numeral, 2, '.', ''),
+                                'monto' => number_format($contrato_cliente[0]->construccion_val_couta_mensual_numeral, 2, '.', ','),
                             ];
                         }
-
                         break;
                 } //switch
             } //for
@@ -502,14 +508,14 @@
                     {{-- strtolower=> convierte de mayusculas a minusculas,ucwords=> convierte la primera letra en mayusculas de cada palabra --}}
                     {{-- la libreria Numero a Letras devulve el numero  en mayusculas --}}
                     ($us.
-                    {{ number_format($couta_inicial_construccion_add_terreno, 2, '.', '') }})
+                    {{ number_format($couta_inicial_construccion_add_terreno, 2, '.', ',') }})
                     {{ ucwords(strtolower($numero_a_letras->toInvoice($couta_inicial_construccion_add_terreno, 2))) }}
                     Dólares Americanos
                 </span>
             @else
                 {{-- si no hay informacion adicional del terreno mostramos couta inicial de la constrccion --}}
                 <span class="text-bold">
-                    $us. {{ number_format($contrato_cliente[0]->construccion_val_couta_inicial_numeral, 2, '.', '') }}
+                    $us. {{ number_format($contrato_cliente[0]->construccion_val_couta_inicial_numeral, 2, '.', ',') }}
                     ({{ $contrato_cliente[0]->construccion_val_couta_inicial_literal }}).
                 </span>
             @endif
