@@ -339,7 +339,7 @@
             </span> ,
             durante un periodo de
             <span class="text-bold">
-                {{ $contrato_cliente[0]->cantidad_couta_mensual }}
+                {{ $contrato_cliente[0]->cantidad_coutas_mensuales }}
             </span>
             meses, completando con estos pagos el precio
             de total de la construcción incluyendo interés.
@@ -361,7 +361,7 @@
                 'monto' => number_format($contrato_cliente[0]->primera_val_couta_mensual_numeral, 2, '.', ','),
             ];
 
-            for ($a = 2; $a <= $contrato_cliente[0]->cantidad_couta_mensual; $a++) {
+            for ($a = 2; $a <= $contrato_cliente[0]->cantidad_coutas_mensuales; $a++) {
                 // Crear un objeto DateTime con la fecha dada
                 $dateTime = new DateTime($fecha_cancelacion_coutas);
                 // Sumar un mes a la fecha
@@ -420,10 +420,10 @@
             } //for
 
             //verificar si es un  numero impar
-            if ($contrato_cliente[0]->cantidad_couta_mensual % 2 != 0) {
-                $parsed_cantidad_couta_mensual = ($contrato_cliente[0]->cantidad_couta_mensual - 1) / 2; //lo volvemos par
+            if ($contrato_cliente[0]->cantidad_coutas_mensuales % 2 != 0) {
+                $parsed_cantidad_couta_mensual = ($contrato_cliente[0]->cantidad_coutas_mensuales - 1) / 2; //lo volvemos par
             } else {
-                $parsed_cantidad_couta_mensual = $contrato_cliente[0]->cantidad_couta_mensual / 2;
+                $parsed_cantidad_couta_mensual = $contrato_cliente[0]->cantidad_coutas_mensuales / 2;
             }
             //ontenemos ultima posicion del array
             $j2 = $parsed_cantidad_couta_mensual;
@@ -453,13 +453,13 @@
                         <td>{{ $list_coutas[$j2]['monto'] }}</td>
                     </tr>
                     {{--
-                     si $contrato_cliente[0]->cantidad_couta_mensual es impar significa que la cantidad de coutas
+                     si $contrato_cliente[0]->cantidad_coutas_mensuales es impar significa que la cantidad de coutas
                     es impar entonces  como se divide en dos las 
                      coutas debemos agregar la ultima couta
                     --}}
-                    @if ($contrato_cliente[0]->cantidad_couta_mensual % 2 != 0 && $parsed_cantidad_couta_mensual == $j1)
+                    @if ($contrato_cliente[0]->cantidad_coutas_mensuales % 2 != 0 && $parsed_cantidad_couta_mensual == $j1)
                         @php
-                            $ultima_couta = $contrato_cliente[0]->cantidad_couta_mensual;
+                            $ultima_couta = $contrato_cliente[0]->cantidad_coutas_mensuales;
                         @endphp
                         <tr>
                             <td>&nbsp;</td>

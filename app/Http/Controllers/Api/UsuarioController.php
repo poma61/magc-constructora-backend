@@ -151,6 +151,17 @@ class UsuarioController extends Controller
                 ->where('id', $request->input('id'))
                 ->first();
 
+
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($usuario == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
+
             $usuario->user = $request->input('user');
             $usuario->id_personal = $request->input('id_personal');
 
@@ -205,7 +216,16 @@ class UsuarioController extends Controller
             $usuario = Usuario::where('status', true)
                 ->where('id', $request->input('id'))
                 ->first();
-                
+
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($usuario == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
             $usuario->status = false;
             $usuario->update();
 

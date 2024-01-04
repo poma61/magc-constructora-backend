@@ -92,7 +92,19 @@ class PersonalController extends Controller
     public function update(PersonalRequest $request)
     {
         try {
-            $personal = Personal::where('status', true)->where('id', $request->input('id'))->first();
+            $personal = Personal::where('status', true)
+                ->where('id', $request->input('id'))
+                ->first();
+
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($personal == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
             $personal->fill($request->except('foto'));
             //verificar si subio una nueva imagen
             if ($request->file('foto') != null) {
@@ -120,7 +132,19 @@ class PersonalController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $personal = Personal::where('status', true)->where('id', $request->input('id'))->first();
+            $personal = Personal::where('status', true)
+                ->where('id', $request->input('id'))
+                ->first();
+
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($personal == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
             $personal->status = false;
             $personal->update();
 

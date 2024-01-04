@@ -36,7 +36,6 @@ class ClienteController extends Controller
                 ->where('desarrolladoras.id', $desarrolladora->id)
                 ->get();
 
-
             return response()->json([
                 'records' => $cliente,
                 'status' => true,
@@ -97,6 +96,14 @@ class ClienteController extends Controller
             $cliente = Cliente::where('status', true)
                 ->where('id', $request->input('id'))
                 ->first();
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($cliente == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
 
             $cliente->update($request->all());
             return response()->json([
@@ -119,6 +126,15 @@ class ClienteController extends Controller
             $cliente = Cliente::where('status', true)
                 ->where('id', $request->input('id'))
                 ->first();
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($cliente == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
             $cliente->status = false;
             $cliente->update();
             return response()->json([

@@ -35,7 +35,6 @@ class DesarrolladoraController extends Controller
     public function store(DesarrolladoraRequest $request)
     {
         try {
-
             $desarrolladora = new Desarrolladora($request->except('logo'));
             $desarrolladora->status = true;
             $image_path = $request->file('logo')->store('img/desarrolladora', 'public');
@@ -59,11 +58,23 @@ class DesarrolladoraController extends Controller
     public function update(DesarrolladoraRequest $request)
     {
         try {
-            $desarrolladora = Desarrolladora::where('status', true)->where('id', $request->input('id'))->first();
+            $desarrolladora = Desarrolladora::where('status', true)
+                ->where('id', $request->input('id'))
+                ->first();
+
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($desarrolladora == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
             $desarrolladora->fill($request->except('logo'));
             //verificar si subio una nueva imagen
             if ($request->file('logo') != null) {
-                $parse_path_image=str_replace("/storage", "", $desarrolladora->logo);
+                $parse_path_image = str_replace("/storage", "", $desarrolladora->logo);
                 Storage::disk('public')->delete($parse_path_image);
                 $image_path = $request->file('logo')->store('img/desarrolladora', 'public');
                 $desarrolladora->logo = "/storage/{$image_path}";
@@ -87,7 +98,19 @@ class DesarrolladoraController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $desarrolladora = Desarrolladora::where('status', true)->where('id', $request->input('id'))->first();
+            $desarrolladora = Desarrolladora::where('status', true)
+                ->where('id', $request->input('id'))
+                ->first();
+
+            //verificamos si el registro se encuentra por estabilidad del sistema
+            if ($desarrolladora == null) {
+                return response()->json([
+                    'record' => null,
+                    'status' => false,
+                    'message' => 'Este registro no se encuentra en el sistema!',
+                ], 404);
+            }
+
             $desarrolladora->status = false;
             $desarrolladora->update();
 

@@ -36,11 +36,16 @@ class ContratoController extends Controller
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
                 ->select(
+                    //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
+                    // los datos del cliente al momento de editar el registro
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
                     'clientes.ci',
                     'clientes.ci_expedido',
+                    'clientes.n_de_contacto',
+                    'clientes.direccion',
+                    'clientes.descripcion as descripcion_cliente',
                     'contratos.*',
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
@@ -156,11 +161,16 @@ class ContratoController extends Controller
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
                 ->select(
+                    //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
+                    // los datos del cliente al momento de editar el registro
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
                     'clientes.ci',
                     'clientes.ci_expedido',
+                    'clientes.n_de_contacto',
+                    'clientes.direccion',
+                    'clientes.descripcion as descripcion_cliente',
                     'contratos.*',
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
@@ -193,11 +203,20 @@ class ContratoController extends Controller
             $contrato = Contrato::where('id', $request_contrato['id']) //accedemos asi porque es un array
                 ->where('status', true)
                 ->first();
-            $contrato->update($request_contrato);
 
-            $detalle_contrato = DetalleContrato::where('id_contrato', $contrato->id)
+            $detalle_contrato = DetalleContrato::where('id_contrato', $request_contrato['id'])
                 ->where('status', true)
                 ->first();
+
+            //verificamos si el registro existe por establidad del sistema
+            if ($contrato == null || $detalle_contrato == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Este registro no se encuentra en el sistema!",
+                ], 404);
+            }
+
+            $contrato->update($request_contrato);
 
             if ($request_detalle_contrato['add_info_terreno']) {
                 $detalle_contrato->update($request_detalle_contrato);
@@ -224,12 +243,17 @@ class ContratoController extends Controller
                 ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
+                //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
+                // los datos del cliente al momento de editar el registro
                 ->select(
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
                     'clientes.ci',
                     'clientes.ci_expedido',
+                    'clientes.n_de_contacto',
+                    'clientes.direccion',
+                    'clientes.descripcion as descripcion_cliente',
                     'contratos.*',
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
@@ -257,10 +281,18 @@ class ContratoController extends Controller
     {
         try {
             $contrato = Contrato::find($request->input('id'));
+            $detalle_contrato = DetalleContrato::where('id_contrato', $request->input('id'))->first();
+
+            //verificamos si el registro existe por establidad del sistema
+            if ($contrato == null || $detalle_contrato == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Este registro no se encuentra en el sistema!",
+                ], 404);
+            }
+
             $contrato->status = false;
             $contrato->update();
-
-            $detalle_contrato = DetalleContrato::where('id_contrato', $request->input('id'))->first();
             $detalle_contrato->status = false;
             $detalle_contrato->update();
 
@@ -284,6 +316,15 @@ class ContratoController extends Controller
                 ->first();
             //se agrega el add_info_terreno=> para que en el frontend se muestre habilitado el checkbox
             //add_info_terreno se muestren los datos
+
+            //verificamos si el registro existe por establidad del sistema
+            if ($detalle_contrato == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Este registro no se encuentra en el sistema!",
+                ], 404);
+            }
+
             if ($detalle_contrato->terreno_valor_total_numeral == null || $detalle_contrato->terreno_val_couta_inicial_numeral == null || $detalle_contrato->terreno_val_couta_mensual_numeral == null) {
                 $detalle_contrato['add_info_terreno'] = false;
             } else {
@@ -368,6 +409,13 @@ class ContratoController extends Controller
                 ->select()
                 ->where('status', true)
                 ->first();
+            //verificamos si el registro existe por establidad del sistema
+            if ($contrato == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Este registro no se encuentra en el sistema!",
+                ], 404);
+            }
 
             //ahora actualizamos el archivo pdf y eliminamos el archivo pdf anterior
             $parse_path_archivo_pdf = str_replace("/storage", "", $contrato->archivo_pdf);

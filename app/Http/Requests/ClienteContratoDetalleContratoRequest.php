@@ -43,7 +43,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.construccion_superficie' => 'required|numeric',
             'detalle_contrato.construccion_valor_total_literal' => 'required',
             'detalle_contrato.construccion_valor_total_numeral' => 'required|numeric',
-            'detalle_contrato.construccion_cantidad_meses_de_entrega' => 'required|numeric',
+            'detalle_contrato.construccion_cantidad_meses_de_entrega' => 'required|integer',
             'detalle_contrato.construccion_val_couta_inicial_literal' => 'required',
             'detalle_contrato.construccion_val_couta_inicial_numeral' => 'required|numeric',
             'detalle_contrato.construccion_val_couta_mensual_literal' => 'required',
@@ -59,7 +59,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                     }
                 },
             ],
-            'detalle_contrato.cantidad_couta_mensual' => 'required|numeric',
+            'detalle_contrato.cantidad_coutas_mensuales' => 'required|integer',
             'detalle_contrato.primera_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.segunda_val_couta_mensual_numeral' => 'required|numeric',
             'detalle_contrato.tercera_val_couta_mensual_numeral' => 'required|numeric',
@@ -74,6 +74,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             $rules['detalle_contrato.terreno_val_couta_mensual_numeral'] = 'required|numeric';
         }
         //SOLO VALIDAMOS CUANDO ES UN NUEVO REGISTRO POR EL METODO POST 
+        //PORQUE AL EDITAR EL REGISTRO NO EDITAMOS LOS DATOS DEL CLIENTE
         if ($this->isMethod('POST')) {
             switch ($this->input('type_of_register_client')) {
                 case 'cliente-nuevo':
@@ -87,7 +88,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                         $rules["clients.{$key}.nombres"] = 'required';
                         $rules["clients.{$key}.apellido_paterno"] = 'required';
                         $rules["clients.{$key}.apellido_materno"] = 'required';
-                        $rules["clients.{$key}.n_de_contacto"] = 'required|numeric';
+                        $rules["clients.{$key}.n_de_contacto"] = 'required|integer';
                         $rules["clients.{$key}.ci"] = [
                             'required',
                             //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
@@ -118,7 +119,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                     $rules['type_of_register_client'] = 'required';
                     break;
             }
-        }
+        } //if
 
         return $rules;
     }
@@ -153,6 +154,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.construccion_valor_total_numeral.required' => 'El campo valor total de la construcción es requerido.',
             'detalle_contrato.construccion_valor_total_numeral.numeric' => 'El campo valor total de la construcción debe ser un número.',
             'detalle_contrato.construccion_cantidad_meses_de_entrega.required' => 'El campo cantidad de meses de entrega, construcción es requerido.',
+            'detalle_contrato.construccion_cantidad_meses_de_entrega.integer' => 'El campo detalle cantidad de meses de entrega, construcción debe ser un entero.',
             'detalle_contrato.construccion_val_couta_inicial_literal.required' => 'El campo couta inicial en literal de la construcción es requerido.',
             'detalle_contrato.construccion_val_couta_inicial_numeral.required' => 'El campo couta inicial de la construcción es requerido.',
             'detalle_contrato.construccion_val_couta_inicial_numeral.numeric' => 'El campo couta inicial de la construcción debe ser un número.',
@@ -163,8 +165,8 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.fecha_cancelacion_coutas.date' => 'El campo fecha de cancelacion de coutas no es una fecha válida.',
             'detalle_contrato.fecha_cancelacion_coutas.after_or_equal' => 'El campo fecha de cancelacion de coutas debe ser una fecha después o igual a :date.',
             'detalle_contrato.fecha_cancelacion_coutas.before_or_equal' => 'El campo fecha de cancelacion de coutas debe ser una fecha antes o igual a :date.',
-            'detalle_contrato.cantidad_couta_mensual.required' => 'El campo cantidad de meses de coutas mensuales es requerido.',
-            'detalle_contrato.cantidad_couta_mensual.numeric' => 'El campo cantidad de meses de coutas mensuales debe ser un número.',
+            'detalle_contrato.cantidad_coutas_mensuales.required' => 'El campo cantidad de coutas mensuales es requerido.',
+            'detalle_contrato.cantidad_coutas_mensuales.integer' => 'El campo cantidad de coutas mensuales debe ser un entero.',
             'detalle_contrato.primera_val_couta_mensual_numeral.required' => 'El campo primera couta mensual es requerido.',
             'detalle_contrato.primera_val_couta_mensual_numeral.numeric' => 'El campo primera couta mensual debe ser un número.',
             'detalle_contrato.segunda_val_couta_mensual_numeral.required' => 'El campo segunda couta mensual es requerido.',
@@ -191,11 +193,12 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
 
         foreach ($this->input('clients', []) as $key => $client) {
             //clients=> es el nombre del array de objetos que se envia desde el frontend
-            $messages["clients.{$key}.id"] = 'El campo id es requerido.';
-            $messages["clients.{$key}.nombres"] = 'El campo nombres es requerido.';
-            $messages["clients.{$key}.apellido_paterno"] = 'El campo apellido paterno es requerido.';
-            $messages["clients.{$key}.apellido_materno"] = 'El campo apellido materno es requerido.';
-            $messages["clients.{$key}.n_de_contacto"] = 'El campo n° de contacto es requerido.';
+            $messages["clients.{$key}.id.required"] = 'El campo id es requerido.';
+            $messages["clients.{$key}.nombres.required"] = 'El campo nombres es requerido.';
+            $messages["clients.{$key}.apellido_paterno.required"] = 'El campo apellido paterno es requerido.';
+            $messages["clients.{$key}.apellido_materno.required"] = 'El campo apellido materno es requerido.';
+            $messages["clients.{$key}.n_de_contacto.required"] = 'El campo n° de contacto es requerido.';
+            $messages["clients.{$key}.n_de_contacto.integer"] = 'El campo n° de contacto debe ser un número entero.';
             $messages["clients.{$key}.ci.required"] = 'El campo ci es requerido.';
             $messages["clients.{$key}.ci.unique"] = 'El campo ci ya ha sido tomado.';
             $messages["clients.{$key}.ci_expedido.required"] = 'El campo expedido es requerido.';

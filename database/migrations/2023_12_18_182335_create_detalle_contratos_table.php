@@ -25,20 +25,20 @@ return new class extends Migration
             $table->string('numero_distrito');
             $table->string('numero_identificacion_terreno'); //debe ser string algunos no tienen numero entonces se coloca  'S/N=sin numero'
             //tecera
-            $table->integer('norte_medida_terreno');
+            $table->double('norte_medida_terreno',20,2);
             $table->string('norte_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
 
-            $table->integer('sur_medida_terreno');
+            $table->double('sur_medida_terreno',20,2);
             $table->string('sur_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
 
-            $table->integer('este_medida_terreno');
+            $table->double('este_medida_terreno',20,2);
             $table->string('este_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
 
-            $table->integer('oeste_medida_terreno');
+            $table->double('oeste_medida_terreno',20,2);
             $table->string('oeste_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 
             //cuarta
             $table->string('construccion_descripcion');
-            $table->double('construccion_superficie');
+            $table->double('construccion_superficie',20,2);
             //numero_identificacion_terreno
             $table->string('construccion_valor_total_literal');
             $table->double('construccion_valor_total_numeral', 40, 2);
@@ -48,7 +48,7 @@ return new class extends Migration
             $table->string('construccion_val_couta_inicial_literal');
             $table->double('construccion_val_couta_inicial_numeral', 40, 2);
 
-            $table->integer('cantidad_couta_mensual');
+            $table->integer('cantidad_coutas_mensuales');
             $table->string('construccion_val_couta_mensual_literal');
             $table->double('construccion_val_couta_mensual_numeral', 40, 2);
             $table->date('fecha_cancelacion_coutas');
