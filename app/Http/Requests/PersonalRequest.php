@@ -29,7 +29,7 @@ class PersonalRequest extends FormRequest
                 'required',
                 //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
                 //aplicamos el ignore cuando sea un update ya que el ci puede ser el mismo porque es una actualizacion del registro
-                Rule::unique('clientes')->where(function ($query) {
+                Rule::unique('personals')->where(function ($query) {
                     $query->where('status', true);
                 })->ignore($this->input('id')),
             ],

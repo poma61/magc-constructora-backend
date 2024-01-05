@@ -49,8 +49,18 @@ class Usuario extends Authenticatable implements JWTSubject
                 'usuarios.user',
                 'roles.rol_name',
                 'personals.*',
+                'desarrolladoras.nombres as desarrolladora'
             ) //no es necesario verificar el status porque en toda peticion en el middleware JwtAuthenticate verifica el status de los datos
             ->where('usuarios.id', Auth::user()->id)
             ->first();
+    }
+
+    // Nueva función para verificar si el personal tiene un rol específico
+    public function hasRole(array $roles): bool
+    {
+        $user = $this->isPersonal(); // Obtén la información del usuario y sus roles
+        // verificar si el valor de $user->rol_name se encuentra en el array $roles
+        //devulve true si el valor de $user->rol_name esta en el array $roles
+        return  in_array($user->rol_name, $roles);
     }
 }//class

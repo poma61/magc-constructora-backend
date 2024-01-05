@@ -21,6 +21,8 @@ class UsuarioByRoleRequest extends FormRequest
     {
         $rules = [
             // si estamos haciendo un update debe permitir el ingreso del mismo usuario en caso de que no se modifique
+            //aqui no hacemos el unique segun el status.. ya que son datos para iniciar sesion y en la base de datos user esta como unique
+            //estos datos son sensibles por eso colocamos unique de forma segura sin depender del status del rgistro
             'user' => 'required|unique:usuarios,user,' . $this->input('id'),
             'rol_name' => 'required',
             'id_personal' => 'required',

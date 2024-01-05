@@ -50,7 +50,6 @@ class AuthController extends Controller
     {
         try {
             Auth::logout();
-
             return response()->json([
                 'message' => 'Successfully logged out',
                 'status' => true,
@@ -106,6 +105,24 @@ class AuthController extends Controller
         } catch (Throwable $th) {
             return response()->json([
                 'record' => [],
+                'message' => $th->getMessage(),
+                'status' => false,
+            ], 500);
+        }
+    }
+
+    public function isRole()
+    {
+        try {
+            $user = Auth::user()->isPersonal();
+            return response()->json([
+                'record' => ['role' => $user->rol_name, 'desarrolladora' => $user->desarrolladora],
+                'message' => 'OK',
+                'status' => true,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'role' => null,
                 'message' => $th->getMessage(),
                 'status' => false,
             ], 500);
