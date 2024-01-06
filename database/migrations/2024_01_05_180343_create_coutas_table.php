@@ -6,29 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up(): void
     {
-        Schema::create('historial_de_pagos', function (Blueprint $table) {
+        Schema::create('coutas', function (Blueprint $table) {
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
-            $table->foreignId('id_cliente');
+            $table->integer('num_couta');
+            $table->date('fecha_maximo_pago_couta');
             $table->double('monto', 40, 2);
-            $table->date('fecha_pago');
+            $table->foreignId('id_contrato');
             $table->boolean('status');
             $table->timestamps();
-
-            $table->foreign('id_cliente')->references('id')->on('clientes');
+            $table->foreign('id_contrato')->references('id')->on('contratos');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
-        Schema::dropIfExists('historial_de_pagos');
+        Schema::dropIfExists('coutas');
     }
 };

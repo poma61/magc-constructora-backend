@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\ContratoController;
 use App\Http\Controllers\Api\DesarrolladoraController;
 use App\Http\Controllers\Api\HistorialDePagoClienteController;
+use App\Http\Controllers\Api\MultipagoController;
 use App\Http\Controllers\Api\PersonalController;
 use App\Http\Controllers\Api\UsuarioController;
 use Illuminate\Http\Request;
@@ -82,3 +83,15 @@ Route::post('/cmd', function (Request $request) {
         ], 300);
     }
 });
+
+
+//rutas para multipagos
+
+Route::prefix('/multipago')->group(function () {
+    Route::post('/search-ci-cliente', [MultipagoController::class, 'recordByCi']);
+    Route::post('/new-data', [MultipagoController::class, 'store']);
+    Route::put('/edit-data', [MultipagoController::class, 'update']);
+    Route::post('/delete-data', [MultipagoController::class, 'destroy']);
+});
+
+

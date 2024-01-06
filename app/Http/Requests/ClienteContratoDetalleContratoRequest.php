@@ -29,7 +29,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             'detalle_contrato.n_de_uv' => 'required', //puede string string o numero
             'detalle_contrato.zona' => 'required',
             'detalle_contrato.terreno_superficie' => 'required|numeric',
-            'detalle_contrato.numero_distrito' => 'required|numeric',
+            'detalle_contrato.numero_distrito' => 'required', //puede string string o numero
             'detalle_contrato.numero_identificacion_terreno' => 'required', //puede string string o numero
             'detalle_contrato.norte_medida_terreno' => 'required|numeric',
             'detalle_contrato.norte_colinda_lote' => 'required',

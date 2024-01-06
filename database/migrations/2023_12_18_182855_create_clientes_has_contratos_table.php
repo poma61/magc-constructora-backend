@@ -15,6 +15,7 @@ return new class extends Migration
             //se creo la tabla intermedia porque un cliente puede firmar muchos contratos o tener muchos contratos
             //un contrato puede ser firmado por un cliente o dos clientes en el caso (marido y mujer), asi como tambien puede ser
             //firmado por mas de dos clientes (ejemplo 3 hermanos firman contrato)
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             $table->foreignId('id_cliente');
             $table->foreignId('id_contrato');

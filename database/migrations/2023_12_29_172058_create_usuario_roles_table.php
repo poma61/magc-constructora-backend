@@ -9,6 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('usuario_roles', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             $table->foreignId('id_user');
             $table->foreignId('id_role');

@@ -10,8 +10,11 @@ use App\Models\Cliente;
 use App\Models\ClienteHasContrato;
 use App\Models\Desarrolladora;
 use App\Models\Contrato;
+use App\Models\Couta;
 use App\Models\DetalleContrato;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use DateInterval;
+use DateTime;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -154,6 +157,82 @@ class ContratoController extends Controller
             );
             $contrato->update();
 
+            //ahora creamos las coutas que debe realiazar el cliente
+            $primera_couta = [
+                'num_couta' => 1,
+                'fecha_maximo_pago_couta' => $detalle_contrato->fecha_cancelacion_coutas,
+                'monto' => $detalle_contrato->primera_val_couta_mensual_numeral,
+                'id_contrato' => $contrato->id,
+                'status' => true,
+            ];
+            $coutas = new Couta($primera_couta);
+            $coutas->save();
+            $fecha_cancelacion_couta = $detalle_contrato->fecha_cancelacion_coutas;
+            for ($i = 2; $i <= $detalle_contrato->cantidad_coutas_mensuales; $i++) {
+                //
+                $date_time = new DateTime($fecha_cancelacion_couta);
+                //sumar un mes a la fecha
+                $date_time->add(new DateInterval('P1M'));
+                $fecha_cancelacion_couta = $date_time->format('Y-m-d');
+                switch ($i) {
+                    case 2:
+                        $couta_values = [
+                            'num_couta' => $i,
+                            'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                            'monto' => $detalle_contrato->segunda_val_couta_mensual_numeral,
+                            'id_contrato' => $contrato->id,
+                            'status' => true,
+                        ];
+                        break;
+
+                    case 3:
+                        $couta_values = [
+                            'num_couta' => $i,
+                            'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                            'monto' => $detalle_contrato->tercera_val_couta_mensual_numeral,
+                            'id_contrato' => $contrato->id,
+                            'status' => true,
+                        ];
+                        break;
+                    case 4:
+                        $couta_values = [
+                            'num_couta' => $i,
+                            'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                            'monto' => $detalle_contrato->cuarta_val_couta_mensual_numeral,
+                            'id_contrato' => $contrato->id,
+                            'status' => true,
+                        ];
+                        break;
+                    default:
+                        if ($request_detalle_contrato['add_info_terreno']) {
+                            //si hay informacion adicional del terreno sumamos couta mensual de la construccion y couta mensual del tereno
+                            $couta_mensual_construccion_add_terreno = $detalle_contrato->construccion_val_couta_mensual_numeral + $detalle_contrato->terreno_val_couta_mensual_numeral;
+                            $couta_values = [
+                                'num_couta' => $i,
+                                'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                                'monto' => $couta_mensual_construccion_add_terreno,
+                                'id_contrato' => $contrato->id,
+                                'status' => true,
+                            ];
+                        } else {
+                            //si no hay informacion adicional del terreno solo llenamos a la lista de coutas mensuales
+                            //la couta de la construccion
+                            $couta_values = [
+                                'num_couta' => $i,
+                                'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                                'monto' => $detalle_contrato->construccion_val_couta_mensual_numeral,
+                                'id_contrato' => $contrato->id,
+                                'status' => true,
+                            ];
+                        }
+                        break;
+                } //switch
+
+                $coutas = new Couta($couta_values);
+                $coutas->save();
+            } //for
+
+
             $id_contrato = $contrato->id;
             //no es necessatio verificar el 'status' de cad atabla ya que es creacion de un nuevo registro
             $contrato = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
@@ -237,6 +316,121 @@ class ContratoController extends Controller
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
 
+            //ahora creamos las coutas que debe realiazar el cliente pero antes verificamos ciertos parametros 
+            //hacemos esto con la finalidad de mantener la integridad de los datos
+            $verify_couta = Couta::where('status', true)
+                ->where('id_contrato', $contrato->id)
+                ->get();
+            $number_of_registered_coutas = $verify_couta->count();
+            if ($number_of_registered_coutas != $detalle_contrato->cantidad_coutas_mensuales) {
+                //si cantidad $detalle_contrato->cantidad_coutas_mensuales es distinto a la cantidad de coutas que hay en la base de datos de la tabla coutas
+                //entonces eliminamos todos estos registros
+                foreach ($verify_couta as $couta) {
+                    $couta->status = false;
+                    $couta->update();
+                }
+            }
+
+            $primera_couta = [
+                'num_couta' => 1,
+                'fecha_maximo_pago_couta' => $detalle_contrato->fecha_cancelacion_coutas,
+                'monto' => $detalle_contrato->primera_val_couta_mensual_numeral,
+                'id_contrato' => $contrato->id,
+                'status' => true,
+            ];
+            if ($number_of_registered_coutas == $detalle_contrato->cantidad_coutas_mensuales) {
+                //si cantidad $detalle_contrato->cantidad_coutas_mensuales es igual a la cantidad de coutas que hay en la base de datos de la tabla coutas
+                //entonces editamos el registro
+                $couta = Couta::where('status', true)
+                    ->where('id_contrato', $contrato->id)
+                    ->where('num_couta', 1)
+                    ->first();
+                $couta->update($primera_couta);
+            } else {
+                //si cantidad $detalle_contrato->cantidad_coutas_mensuales a cambiado entonces volvemos a crear las coutas
+                //en la base de datos
+                $new_couta = new Couta($primera_couta);
+                $new_couta->save();
+            }
+
+            $fecha_cancelacion_couta = $detalle_contrato->fecha_cancelacion_coutas;
+            for ($i = 2; $i <= $detalle_contrato->cantidad_coutas_mensuales; $i++) {
+                //
+                $date_time = new DateTime($fecha_cancelacion_couta);
+                //sumar un mes a la fecha
+                $date_time->add(new DateInterval('P1M'));
+                $fecha_cancelacion_couta = $date_time->format('Y-m-d');
+                switch ($i) {
+                    case 2:
+                        $couta_values = [
+                            'num_couta' => $i,
+                            'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                            'monto' => $detalle_contrato->segunda_val_couta_mensual_numeral,
+                            'id_contrato' => $contrato->id,
+                            'status' => true,
+                        ];
+                        break;
+
+                    case 3:
+                        $couta_values = [
+                            'num_couta' => $i,
+                            'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                            'monto' => $detalle_contrato->tercera_val_couta_mensual_numeral,
+                            'id_contrato' => $contrato->id,
+                            'status' => true,
+                        ];
+                        break;
+                    case 4:
+                        $couta_values = [
+                            'num_couta' => $i,
+                            'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                            'monto' => $detalle_contrato->cuarta_val_couta_mensual_numeral,
+                            'id_contrato' => $contrato->id,
+                            'status' => true,
+                        ];
+                        break;
+                    default:
+                        if ($request_detalle_contrato['add_info_terreno']) {
+                            //si hay informacion adicional del terreno sumamos couta mensual de la construccion y couta mensual del tereno
+                            $couta_mensual_construccion_add_terreno = $detalle_contrato->construccion_val_couta_mensual_numeral + $detalle_contrato->terreno_val_couta_mensual_numeral;
+                            $couta_values = [
+                                'num_couta' => $i,
+                                'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                                'monto' => $couta_mensual_construccion_add_terreno,
+                                'id_contrato' => $contrato->id,
+                                'status' => true,
+                            ];
+                        } else {
+                            //si no hay informacion adicional del terreno solo llenamos a la lista de coutas mensuales
+                            //la couta de la construccion
+                            $couta_values = [
+                                'num_couta' => $i,
+                                'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
+                                'monto' => $detalle_contrato->construccion_val_couta_mensual_numeral,
+                                'id_contrato' => $contrato->id,
+                                'status' => true,
+                            ];
+                        }
+                        break;
+                } //switch
+
+                if ($number_of_registered_coutas == $detalle_contrato->cantidad_coutas_mensuales) {
+                    //si cantidad $detalle_contrato->cantidad_coutas_mensuales es igual a la cantidad de coutas que hay en la base de datos de la tabla coutas
+                    //entonces editamos el registro
+                    $couta = Couta::where('status', true)
+                        ->where('id_contrato', $contrato->id)
+                        ->where('num_couta', $i)
+                        ->first();
+                    $couta->update($couta_values);
+                } else {
+                    //si cantidad $detalle_contrato->cantidad_coutas_mensuales a cambiado entonces volvemos a crear las coutas
+                    //en la base de datos
+                    $new_couta = new Couta($couta_values);
+                    $new_couta->save();
+                }
+            } //for
+
+
             $id_contrato = $contrato->id;
             //no es necessatio verificar el 'status' de cad atabla ya que es creacion de un nuevo registro
             $contrato = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
@@ -280,8 +474,12 @@ class ContratoController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $contrato = Contrato::find($request->input('id'));
-            $detalle_contrato = DetalleContrato::where('id_contrato', $request->input('id'))->first();
+            $contrato = Contrato::where('status', true)
+                ->where($request->input('id'))
+                ->first();
+            $detalle_contrato = DetalleContrato::where('status', true)
+                ->where('id_contrato', $request->input('id'))
+                ->first();
 
             //verificamos si el registro existe por establidad del sistema
             if ($contrato == null || $detalle_contrato == null) {

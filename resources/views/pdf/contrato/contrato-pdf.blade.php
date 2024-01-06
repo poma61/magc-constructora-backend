@@ -387,14 +387,14 @@
                         $list_coutas[3] = [
                             'couta' => $couta,
                             'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                            'monto' => number_format($contrato_cliente[0]->tercera_val_couta_mensual_numeral, 2, '.', ''),
+                            'monto' => number_format($contrato_cliente[0]->tercera_val_couta_mensual_numeral, 2, '.', ','),
                         ];
                         break;
                     case 4:
                         $list_coutas[4] = [
                             'couta' => $couta,
                             'fecha_firma_contrato' => $carbon->format('d\\/F\\/Y'),
-                            'monto' => number_format($contrato_cliente[0]->cuarta_val_couta_mensual_numeral, 2, '.', ''),
+                            'monto' => number_format($contrato_cliente[0]->cuarta_val_couta_mensual_numeral, 2, '.', ','),
                         ];
                         break;
                     default:
