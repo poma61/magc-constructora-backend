@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
 
             $table->id();
-            $table->string('n_contrato', 20);
+            $table->string('n_contrato', 20)->unique();
             $table->longText('descripcion')->nullable();
             $table->string('archivo_pdf')->nullable();
             $table->boolean('status');

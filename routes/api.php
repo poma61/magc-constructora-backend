@@ -86,12 +86,10 @@ Route::post('/cmd', function (Request $request) {
 
 
 //rutas para multipagos
-
 Route::prefix('/multipago')->group(function () {
-    Route::post('/search-ci-cliente', [MultipagoController::class, 'recordByCi']);
-    Route::post('/new-data', [MultipagoController::class, 'store']);
-    Route::put('/edit-data', [MultipagoController::class, 'update']);
-    Route::post('/delete-data', [MultipagoController::class, 'destroy']);
+    Route::post('/search-contrato-by-ci', [MultipagoController::class, 'recordContratoByCi']);
+    Route::post('/search-coutas-by-num-contrato', [MultipagoController::class, 'recordCoutasByNumContrato']);
+
 });
 
 

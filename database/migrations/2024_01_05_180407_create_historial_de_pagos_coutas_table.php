@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historial_de_pagos_coutas', function (Blueprint $table) {
+        Schema::create('historial_de_pago_coutas', function (Blueprint $table) {
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             $table->date('fecha_pago_couta');

@@ -113,7 +113,7 @@ class ContratoController extends Controller
                 default:
                     return response()->json([
                         'status' => false,
-                        'message' => "No se pudo encontrar ningun tipo de registro para el cliente!",
+                        'message' => "No se pudo encontrar ninguna modalidad de  tipo de registro para el cliente!",
                         'record' => null,
                     ], 422);
                     break;
@@ -638,16 +638,8 @@ class ContratoController extends Controller
     {
         //obtenemos ultimo contrato registrato por ciudad
         //y no necesitamos verificar el status
-        // ya que aunque el registro se haya eliminado igualmente contatos los registros de contratos para generar un n_contrato
-        $ultimo_contrato_id = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
-            ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
-            ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
-            ->select(
-                'contratos.*',
-            )
-            ->where('clientes.status', true)
-            ->where('contratos.status', true)
-            ->where('detalle_contratos.status', true)
+        // ya que aunque el registro se haya eliminado igualmente contamos los registros de contratos para generar un n_contrato
+        $ultimo_contrato_id = Contrato::select('n_contrato')
             ->max('contratos.id');
 
         $ultimo_contrato = Contrato::find($ultimo_contrato_id);
@@ -660,7 +652,7 @@ class ContratoController extends Controller
 
         $num_result = $num_result + 1;
         $num_result = str_pad($num_result, 4, '0', STR_PAD_LEFT); //agregar ceros al numero
-        $year =  date('Y');;
+        $year =  date('Y');
         return  "{$num_result}/{$year}";
     }
 }//class

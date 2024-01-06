@@ -9,7 +9,7 @@ class HistorialPagoCouta extends Model
 {
     use HasFactory;
 
-    protected $table = 'historial_de_pagos_coutas';
+    protected $table = 'historial_de_pago_coutas';
 
     protected $fillable = [
         'fecha_pago_couta',
