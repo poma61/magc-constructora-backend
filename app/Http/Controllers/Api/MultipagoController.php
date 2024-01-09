@@ -92,7 +92,7 @@ class MultipagoController extends Controller
             if ($transaccion == null) {
                 return response()->json([
                     'status' => false,
-                    'message' => "Esta transacción no se encuentra en el sistema!",
+                    'message' => "Esta transacción no se encuentra en el sistema o ya fue anulada!",
                 ], 404);
             }
             $transaccion->transaction_status = false;

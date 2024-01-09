@@ -17,7 +17,7 @@
 <body>
     <main class="container">
         <h1 class="as-box-shadow as-font-white">
-            MAGC - MULTIPAGOS
+            MAGC - DESARROLLADORAS
         </h1>
            <img class="img__logo" src="{{ asset('src/images/logo-empresa.jpeg') }}">
         <h3 class="as-font-white">
