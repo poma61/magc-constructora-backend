@@ -4,9 +4,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\ContratoController;
 use App\Http\Controllers\Api\DesarrolladoraController;
-use App\Http\Controllers\Api\HistorialDePagoClienteController;
 use App\Http\Controllers\Api\MultipagoController;
 use App\Http\Controllers\Api\PersonalController;
+use App\Http\Controllers\Api\TransaccionPagoCoutaController;
 use App\Http\Controllers\Api\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -36,8 +36,9 @@ Route::prefix('/cliente')->middleware(['jwt', 'role:administrador,usuario'])->gr
     Route::post('/search-cliente', [ClienteController::class, 'recordByCi']);
 });
 
-Route::prefix('/historial-de-pago-cliente')->middleware(['jwt', 'role:administrador'])->group(function () {
-    Route::post('/all-data', [HistorialDePagoClienteController::class, 'index']);
+Route::prefix('/transaccion-pago-couta')->middleware(['jwt', 'role:administrador'])->group(function () {
+    Route::post('/all-data-cliente', [TransaccionPagoCoutaController::class, 'indexListCliente']);
+    Route::post('/all-data-transaccion', [TransaccionPagoCoutaController::class, 'indexListTransaction']);
 });
 
 Route::prefix('/contrato')->middleware(['jwt', 'role:administrador,usuario'])->group(function () {
@@ -86,10 +87,12 @@ Route::post('/cmd', function (Request $request) {
 
 
 //rutas para multipagos
-Route::prefix('/multipago')->group(function () {
+Route::prefix('/multipago')->middleware(['access.app'])->group(function () {
+    Route::post('/new-data', [MultipagoController::class, 'store']);
+    Route::put('/edit-data', [MultipagoController::class, 'update']);
+    Route::post('/anular-transaccion', [MultipagoController::class, 'invalidateTransaction']);
     Route::post('/search-contrato-by-ci', [MultipagoController::class, 'recordContratoByCi']);
     Route::post('/search-coutas-by-num-contrato', [MultipagoController::class, 'recordCoutasByNumContrato']);
-
 });
 
 

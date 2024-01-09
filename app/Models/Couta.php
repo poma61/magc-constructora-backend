@@ -9,8 +9,6 @@ class Couta extends Model
 {
     use HasFactory;
 
-
-
     protected $fillable = [
         'num_couta',
         'fecha_maximo_pago_couta',
@@ -23,4 +21,5 @@ class Couta extends Model
         'updated_at',
         'status',
     ];
-}
+    
+}//class

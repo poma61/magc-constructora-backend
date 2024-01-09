@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HistorialPagoCouta extends Model
+class TransaccionPagoCouta extends Model
 {
     use HasFactory;
-
-    protected $table = 'historial_de_pago_coutas';
+    protected $table = 'transacciones_pago_coutas';
 
     protected $fillable = [
         'fecha_pago_couta',
@@ -24,11 +23,12 @@ class HistorialPagoCouta extends Model
         'apellido_materno',
         'correo_electronico',
         'numero_de_contacto',
-        'pago_valido',
+        'transaction_status',
     ];
 
     protected $hidden = [
         'updated_at',
-        'pago_valido',
+        'created_at',
+        'transaction_status',
     ];
 }//class

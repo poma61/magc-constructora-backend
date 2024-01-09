@@ -6,12 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
-        Schema::create('historial_de_pago_coutas', function (Blueprint $table) {
+        Schema::create('transacciones_pago_coutas', function (Blueprint $table) {
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             $table->date('fecha_pago_couta');
@@ -26,7 +24,7 @@ return new class extends Migration
             $table->string('apellido_materno');
             $table->string('correo_electronico');
             $table->string('numero_de_contacto', 100);
-            $table->boolean('pago_valido'); //=> true => pago correcto, false=>significa que el pago fue anulado
+            $table->boolean('transaction_status'); //=> true => transaccion valido, false=>significa que la transaccion fue anulada
             $table->timestamps();
             $table->foreign('id_couta')->references('id')->on('coutas');
         });
@@ -35,6 +33,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('historial_de_pagos_coutas');
+        Schema::dropIfExists('transacciones_pago_coutas');
     }
 };

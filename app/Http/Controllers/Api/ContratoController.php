@@ -167,6 +167,7 @@ class ContratoController extends Controller
             ];
             $coutas = new Couta($primera_couta);
             $coutas->save();
+
             $fecha_cancelacion_couta = $detalle_contrato->fecha_cancelacion_coutas;
             for ($i = 2; $i <= $detalle_contrato->cantidad_coutas_mensuales; $i++) {
                 //
@@ -232,7 +233,6 @@ class ContratoController extends Controller
                 $coutas->save();
             } //for
 
-
             $id_contrato = $contrato->id;
             //no es necessatio verificar el 'status' de cad atabla ya que es creacion de un nuevo registro
             $contrato = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
@@ -259,7 +259,8 @@ class ContratoController extends Controller
                 ->where('contratos.id', $id_contrato)
                 ->first();
 
-            return response()->json([
+            
+                return response()->json([
                 'status' => true,
                 'message' => "Contrato generado exitosamente!",
                 'record' => $contrato,
