@@ -27,10 +27,11 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             //detalle contrato
             'detalle_contrato.n_de_lote' => 'required', //puede string string o numero
             'detalle_contrato.n_de_uv' => 'required', //puede string string o numero
+            'detalle_contrato.n_de_manzano' => 'required', //puede string string o numero
             'detalle_contrato.zona' => 'required',
             'detalle_contrato.terreno_superficie' => 'required|numeric',
-            'detalle_contrato.numero_distrito' => 'required', //puede string string o numero
-            'detalle_contrato.numero_identificacion_terreno' => 'required', //puede string string o numero
+            'detalle_contrato.nombre_urbanizacion' => 'required', //puede string string o numero
+            'detalle_contrato.n_identificacion_terreno' => 'required', //puede string string o numero
             'detalle_contrato.norte_medida_terreno' => 'required|numeric',
             'detalle_contrato.norte_colinda_lote' => 'required',
             'detalle_contrato.sur_medida_terreno' => 'required|numeric',
@@ -130,11 +131,12 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             //detalle contrato
             'detalle_contrato.n_de_lote.required' => 'El campo n° de lote es requerido.',
             'detalle_contrato.n_de_uv.required' => 'El campo n° de uv es requerido.',
+            'detalle_contrato.n_de_manzano.required' => 'El campo n° de manzano es requerido.',
             'detalle_contrato.zona.required' => 'El campo zona es requerido.',
             'detalle_contrato.terreno_superficie.required' => 'El campo superficie de terreno es requerido.',
             'detalle_contrato.terreno_superficie.numeric' => 'El campo superficie de terreno debe ser un número.',
-            'detalle_contrato.numero_distrito.required' => 'El campo numero de distrito es requerido.',
-            'detalle_contrato.numero_identificacion_terreno.required' => 'El campo n° de identificación de terreno es requerido.',
+            'detalle_contrato.nombre_urbanizacion.required' => 'El campo nombre de urbanizacion es requerido.',
+            'detalle_contrato.n_identificacion_terreno.required' => 'El campo n° de identificación de terreno es requerido.',
             'detalle_contrato.norte_medida_terreno.required' => 'El campo norte, medida del terreno es requerido.',
             'detalle_contrato.norte_medida_terreno.numeric' => 'El campo norte, medida del terreno debe ser un número.',
             'detalle_contrato.norte_colinda_lote.required' => 'El campo norte, colinda con lote es requerido.',

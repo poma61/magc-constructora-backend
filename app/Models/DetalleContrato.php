@@ -10,16 +10,17 @@ class DetalleContrato extends Model
     use HasFactory;
 
     protected $fillable = [
-        'n_de_lote',
-        'n_de_uv',
+        'n_de_lote', //puede ser numero o string
+        'n_de_uv', //puede ser numero o string
+        'n_de_manzano', //puede ser numero o string
         'zona',
         'terreno_superficie',
-        'terreno_valor_total_numeral',//puede ser nulo
-        'terreno_valor_total_literal',//puede ser nulo
-        'terreno_val_couta_inicial_numeral',//puede ser nulo
-        'terreno_val_couta_mensual_numeral',//puede ser nulo
-        'numero_distrito',
-        'numero_identificacion_terreno',
+        'terreno_valor_total_numeral', //puede ser nulo
+        'terreno_valor_total_literal', //puede ser nulo
+        'terreno_val_couta_inicial_numeral', //puede ser nulo
+        'terreno_val_couta_mensual_numeral', //puede ser nulo
+        'nombre_urbanizacion',
+        'n_identificacion_terreno',//puede ser numero o string
         'norte_medida_terreno',
         'norte_colinda_lote',
         'sur_medida_terreno',
@@ -53,4 +54,4 @@ class DetalleContrato extends Model
         'updated_at',
         'status',
     ];
-}
+}//class

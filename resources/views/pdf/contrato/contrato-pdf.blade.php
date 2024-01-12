@@ -97,49 +97,63 @@
                         ERROR AL LISTAR CLIENTE
                     </span>
             @endswitch
+            
             @if ($add_info_terreno)
                 {{-- si hay informaciona adicional del terreno  mostramos datos de la construccion y el terreno --}}
                 <p class="text-parrafo">
                     <span class="text-bold"> SEGUNDA: (DERECHO PROPIETARIO).- EL ACREEDOR,</span> declara ser aportante
                     de la construcción de un inmueble
-                    identificado legalmente en el lote <span class="text-bold"> {{ $contrato_cliente[0]->n_de_lote }},
-                    </span> en la U.V.
-                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_uv }}, </span>
-                    <span class="text-bold"> zona {{ $contrato_cliente[0]->zona }}, </span>con una superficie de
+                    identificado legalmente en el lote N°
+                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_lote }},</span>
+                    en la Urbanización 
+                    <span class="text-bold"> {{ $contrato_cliente[0]->nombre_urbanizacion }} </span>
+                    U.V.
+                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_uv }} </span>
+                    Manzano
+                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_manzano }}, </span>
+                    Zona 
+                    <span class="text-bold">{{ $contrato_cliente[0]->zona }}, </span>con una superficie de
                     terreno
-                    de <span class="text-bold"> {{ $contrato_cliente[0]->terreno_superficie }} m<sup>2</sup>, </span>
+                    de <span class="text-bold"> {{ $contrato_cliente[0]->terreno_superficie }} m<sup>2</sup> </span>
                     y con una suma de
                     <span class="text-bold">
                         {{ $contrato_cliente[0]->terreno_valor_total_literal }}
-                        ($us. {{ number_format($contrato_cliente[0]->terreno_valor_total_numeral, 2, '.', ',') }})
+                        ($us. {{ number_format($contrato_cliente[0]->terreno_valor_total_numeral, 2, '.', ',') }}),
                     </span>
-                    Distrito <span class="text-bold"> {{ $contrato_cliente[0]->numero_distrito }}, </span> que a la
-                    fecha se encuentra registrado en Derechos
+                    que a la fecha se encuentra registrado en Derechos
                     Reales bajo la Matrícula Computarizada N°
                     <span class="text-bold">
-                        {{ $contrato_cliente[0]->numero_identificacion_terreno }}.
+                        {{ $contrato_cliente[0]->n_identificacion_terreno }}.
                     </span>
                 </p>
             @else
                 {{-- si no hay informaciona adicional del terreno solo mostramos datos de la construccion --}}
                 <p class="text-parrafo">
-                    <span class="text-bold"> SEGUNDA: (DERECHO PROPIETARIO).- EL ACREEDOR,</span> declara ser
-                    aportante de la construcción de un inmueble
-                    identificado legalmente en el lote <span class="text-bold"> {{ $contrato_cliente[0]->n_de_lote }},
-                    </span> en la U.V.
-                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_uv }}, </span>
-                    <span class="text-bold"> zona {{ $contrato_cliente[0]->zona }}, </span>con una superficie de
-                    terreno de
-                    <span class="text-bold"> {{ $contrato_cliente[0]->terreno_superficie }} m<sup>2</sup>, </span>
-                    Distrito <span class="text-bold"> {{ $contrato_cliente[0]->numero_distrito }}, </span> que a la
-                    fecha se encuentra registrado en Derechos
+                    <span class="text-bold"> SEGUNDA: (DERECHO PROPIETARIO).- EL ACREEDOR,</span> declara ser aportante
+                    de la construcción de un inmueble
+                    identificado legalmente en el lote N°
+                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_lote }},</span>
+                    en la Urbanización 
+                    <span class="text-bold"> {{ $contrato_cliente[0]->nombre_urbanizacion }} </span>
+                    U.V.
+                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_uv }} </span>
+                    Manzano
+                    <span class="text-bold"> {{ $contrato_cliente[0]->n_de_manzano }}, </span>
+                    Zona 
+                    <span class="text-bold">{{ $contrato_cliente[0]->zona }}, </span>con una superficie de
+                    terreno
+                    de <span class="text-bold"> {{ $contrato_cliente[0]->terreno_superficie }} m<sup>2</sup>, </span>
+                    que a la fecha se encuentra registrado en Derechos
                     Reales bajo la Matrícula Computarizada N°
-                    <span class="text-bold"> {{ $contrato_cliente[0]->numero_identificacion_terreno }}. </span>
+                    <span class="text-bold">
+                        {{ $contrato_cliente[0]->n_identificacion_terreno }}.
+                    </span>
                 </p>
             @endif
+
         <p class="text-parrafo">
             <span class="text-bold"> TERCERA: (COLINDANCIAS).- </span> El inmueble identificado legalmente con el N°
-            <span class="text-bold"> {{ $contrato_cliente[0]->numero_identificacion_terreno }}, </span>
+            <span class="text-bold"> {{ $contrato_cliente[0]->n_identificacion_terreno }}, </span>
             objeto del presente contrato, tiene las siguientes colindancias:
         </p>
 
@@ -187,7 +201,7 @@
                     ANTERIORMENTE Y RECONOCIMIENTO DE DEUDA).-</span>
                 EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
                 compromete a construir el inmueble signado legalmente con el N°
-                <span class="text-bold"> {{ $contrato_cliente[0]->numero_identificacion_terreno }}, </span> señalado
+                <span class="text-bold"> {{ $contrato_cliente[0]->n_identificacion_terreno }}, </span> señalado
                 en las cláusulas segunda y tercera del presente documento, por el valor de la suma de
                 <span class="text-bold">
                     {{-- strtolower=> convierte de mayusculas a minusculas,ucwords=> convierte la primera letra en mayusculas de cada palabra --}}
@@ -206,7 +220,7 @@
                     Y RECONOCIMIENTO DE DEUDA).-</span>
                 EL <span class="text-bold"> PROMITENTE ACREEDOR</span> se
                 compromete a construir el inmueble signado legalmente con el N°
-                <span class="text-bold"> {{ $contrato_cliente[0]->numero_identificacion_terreno }}, </span> señalado
+                <span class="text-bold"> {{ $contrato_cliente[0]->n_identificacion_terreno }}, </span> señalado
                 en las cláusulas segunda y tercera del presente documento, por el valor de la suma de
                 <span class="text-bold"> {{ $contrato_cliente[0]->construccion_valor_total_literal }}
                     ($us. {{ number_format($contrato_cliente[0]->construccion_valor_total_numeral, 2, '.', ',') }}.-).
@@ -342,7 +356,7 @@
                 {{ $contrato_cliente[0]->cantidad_coutas_mensuales }}
             </span>
             meses, completando con estos pagos el precio
-            de total de la construcción incluyendo interés.
+            total de la construcción incluyendo interés.
         </p>
 
         {{-- aqui va la tabla --}}
@@ -526,7 +540,7 @@
             de la casa construida,
             tendrá un plazo de 120 días hábiles para poder efectuar la entrega de la casa construida, pasando dicho
             plazo tendrá una penalización de
-            DOS DOLARES AMERICANOS ($sus. 2.00.-) por día de retraso.
+            DOS DOLARES AMERICANOS ($us. 2.00.-) por día de retraso.
         </p>
 
         <p class="text-parrafo">

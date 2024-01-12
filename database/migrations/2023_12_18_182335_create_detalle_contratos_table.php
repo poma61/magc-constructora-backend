@@ -16,14 +16,15 @@ return new class extends Migration
             //segunda
             $table->string('n_de_lote'); //debe ser string porque hay posibilidades de que tenga una letra
             $table->string('n_de_uv'); //debe ser string porque hay posibilidades de que tenga una letra
+            $table->string('n_de_manzano');//debe ser string porque hay posibilidades de que tenga una letra
             $table->string('zona');
             $table->string('terreno_superficie');
             $table->double('terreno_valor_total_numeral', 40, 2)->nullable();
             $table->string('terreno_valor_total_literal')->nullable();
             $table->double('terreno_val_couta_inicial_numeral', 40, 2)->nullable();
             $table->double('terreno_val_couta_mensual_numeral', 40, 2)->nullable();
-            $table->string('numero_distrito'); //debe ser string porque hay posibilidades de que tenga una letra
-            $table->string('numero_identificacion_terreno'); //debe ser string algunos no tienen numero entonces se coloca  'S/N=sin numero'
+            $table->string('nombre_urbanizacion'); //debe ser string porque hay posibilidades de que tenga una letra
+            $table->string('n_identificacion_terreno'); //debe ser string algunos no tienen numero entonces se coloca  'S/N=sin numero'
             //tecera
             $table->double('norte_medida_terreno', 20, 2);
             $table->string('norte_colinda_lote'); //colinda con lote NUMERO DE LOTE O NOMBRE DE LA CALLE 

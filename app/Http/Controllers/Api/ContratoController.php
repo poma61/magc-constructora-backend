@@ -257,10 +257,9 @@ class ContratoController extends Controller
                     'clientes_has_contratos.id as id_clientes_has_contratos',
                 )
                 ->where('contratos.id', $id_contrato)
-                ->first();
+                ->get();
 
-            
-                return response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => "Contrato generado exitosamente!",
                 'record' => $contrato,
@@ -456,7 +455,7 @@ class ContratoController extends Controller
                     'clientes_has_contratos.id as id_clientes_has_contratos',
                 )
                 ->where('contratos.id', $id_contrato)
-                ->first();
+                ->get();
 
             return response()->json([
                 'status' => true,
@@ -476,17 +475,17 @@ class ContratoController extends Controller
     {
         try {
             $contrato = Contrato::where('status', true)
-                ->where($request->input('id'))
+                ->where('id', $request->input('id_contrato'))
                 ->first();
             $detalle_contrato = DetalleContrato::where('status', true)
-                ->where('id_contrato', $request->input('id'))
+                ->where('id_contrato', $request->input('id_contrato'))
                 ->first();
 
             //verificamos si el registro existe por establidad del sistema
             if ($contrato == null || $detalle_contrato == null) {
                 return response()->json([
                     'status' => false,
-                    'message' => "Este registro no se encuentra en el sistema!",
+                    'message' => "Este registro no se encuentra en el sistema y/o ya fue eliminado!",
                 ], 404);
             }
 
@@ -601,11 +600,9 @@ class ContratoController extends Controller
     public function updatePdfFile(Request $request)
     {
         //creamos esta funcion para actualizar el pdf
-        //en caso de que se actualize los datos del cliente en el menu clientes entonces se debe volver a
-        //generar el archivo pdf
+        //en caso de que se actualize los datos del cliente en el menu clientes entonces se debe volver a generar el archivo pdf
         try {
             $contrato = Contrato::where('id', $request->input('id_contrato')) //accedemos asi porque es un array
-                ->select()
                 ->where('status', true)
                 ->first();
             //verificamos si el registro existe por establidad del sistema
@@ -621,10 +618,24 @@ class ContratoController extends Controller
             Storage::disk('public')->delete($parse_path_archivo_pdf);
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
+
+            $id_contrato = $contrato->id;
+            $contrato = Contrato::join('detalle_contratos', 'detalle_contratos.id_contrato', '=', 'contratos.id')
+                ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
+                ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
+                ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
+                //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
+                // los datos del cliente al momento de editar el registro
+                ->select(
+                    'contratos.archivo_pdf',
+                )
+                ->where('contratos.id', $id_contrato)
+                ->get();
+
             return response()->json([
                 'status' => true,
                 'message' => "Archivo pdf actualizado!",
-                'record' => ['archivo_pdf' => $contrato->archivo_pdf],
+                'record' => $contrato,
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
@@ -640,10 +651,10 @@ class ContratoController extends Controller
         //obtenemos ultimo contrato registrato por ciudad
         //y no necesitamos verificar el status
         // ya que aunque el registro se haya eliminado igualmente contamos los registros de contratos para generar un n_contrato
-        $ultimo_contrato_id = Contrato::select('n_contrato')
+        $ultimo_contrato_by_id = Contrato::select('n_contrato')
             ->max('contratos.id');
 
-        $ultimo_contrato = Contrato::find($ultimo_contrato_id);
+        $ultimo_contrato = Contrato::find($ultimo_contrato_by_id);
 
         // verificamos si es el primer registro, entonces es nulo y asignamos el numero 0000/2023
         $old_numero_contrato = ($ultimo_contrato == null) ? '0000/2023' : $ultimo_contrato->n_contrato;

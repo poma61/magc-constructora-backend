@@ -45,6 +45,7 @@ class UsuarioController extends Controller
                     'personals.foto',
                 )
                 ->where('personals.status', true)
+                ->where('usuarios.user','<>','system')
                 ->where('usuarios.status', true)
                 ->where('usuario_roles.status', true)
                 ->where('desarrolladoras.status', true)
