@@ -13,10 +13,8 @@ use App\Models\UsuarioRole;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
 
-
 class UsuarioController extends Controller
 {
-
     public function index(Request $request)
     {
         try {
@@ -97,7 +95,7 @@ class UsuarioController extends Controller
             $usuario->id_personal = $request->input('id_personal');
             $usuario->save();
 
-            //creamos el rol 
+            //creamos el rol
             $usuario_role = new UsuarioRole();
             $usuario_role->id_role = $role->id;
             $usuario_role->id_user = $usuario->id;
@@ -173,7 +171,7 @@ class UsuarioController extends Controller
             $usuario->update();
 
 
-            //actualizamos el rol 
+            //actualizamos el rol
             $usuario_role = UsuarioRole::where('status', true)
                 ->where('id_user', $usuario->id)
                 ->first();

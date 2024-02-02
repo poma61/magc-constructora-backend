@@ -74,18 +74,17 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             $rules['detalle_contrato.terreno_val_couta_inicial_numeral'] = 'required|numeric';
             $rules['detalle_contrato.terreno_val_couta_mensual_numeral'] = 'required|numeric';
         }
-        //SOLO VALIDAMOS CUANDO ES UN NUEVO REGISTRO POR EL METODO POST 
+        //SOLO VALIDAMOS CUANDO ES UN NUEVO REGISTRO POR EL METODO POST
         //PORQUE AL EDITAR EL REGISTRO NO EDITAMOS LOS DATOS DEL CLIENTE
         if ($this->isMethod('POST')) {
             switch ($this->input('type_of_register_client')) {
                 case 'cliente-nuevo':
                     // Agregar reglas para cada cliente en el array
                     foreach ($this->input('clients', []) as $key => $client) {
-                        //verificar que ningun campo 
+                        //verificar que ningun campo
                         //clients=> es el nombre del array de objetos que se envia desde el frontend
                         // esta validacion se agrega porque en el frontend se puede enviar un cliente ya registrado anteriormente gracias a la opcion "Cliente registrado"
                         //donde se busca al cliente registrado por el CI;
-                        $rules["clients.{$key}.id"] = 'required';
                         $rules["clients.{$key}.nombres"] = 'required';
                         $rules["clients.{$key}.apellido_paterno"] = 'required';
                         $rules["clients.{$key}.apellido_materno"] = 'required';

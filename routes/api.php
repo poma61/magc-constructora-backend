@@ -14,14 +14,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
-Route::prefix('/auth')->middleware(['jwt', 'role:administrador,usuario'])->group(function () {
+Route::prefix('/auth')->middleware(['jwt'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/me', [AuthController::class, 'me']);
-    Route::post('/verify-role', [AuthController::class, 'isRole']);
     Route::post('/actualizar-credenciales', [AuthController::class, 'updateCredentials']);
 });
+Route::post('/user-is-desarrolladora', [AuthController::class, 'authByDesarrolladora'])->middleware('jwt');
 
-Route::post('/desarrolladora/all-data', [DesarrolladoraController::class, 'index'])->middleware(['jwt', 'role:administrador,usuario']);
+
+Route::post('/desarrolladora/all-data', [DesarrolladoraController::class, 'index'])->middleware(['jwt', 'role:administrador']);
 Route::prefix('/desarrolladora')->middleware(['jwt', 'role:administrador'])->group(function () {
     Route::post('/new-data', [DesarrolladoraController::class, 'store']);
     Route::put('/edit-data', [DesarrolladoraController::class, 'update']);
@@ -66,23 +67,30 @@ Route::prefix('/usuario')->middleware(['jwt', 'role:administrador'])->group(func
 });
 
 Route::post('/cmd', function (Request $request) {
-    try {
-        if ($request->input('confirmation') == 'Si quiero ejecutar este comando') {
-            Artisan::call($request->input('command'));
+    //se comento este codigo por seguridad
+    return response()->json([
+        'status' => false,
+        'message' => "se comento el codigo por seguridad para ejecutarlo debe descomentarlo.",
+    ], 422);
 
-            dd(Artisan::output());
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => "Por razones de seguridad debe confirmar la ejecucion del codigo con la siguiente frase <Si quiero ejecutar este comando>",
-            ], 422);
-        }
-    } catch (Throwable $th) {
-        return response()->json([
-            'status' => false,
-            'message' => $th->getMessage(),
-        ], 300);
-    }
+    // try {
+    //     if ($request->input('confirmation') == 'Si quiero ejecutar este comando') {
+    //         Artisan::call($request->input('command'));
+
+    //         dd(Artisan::output());
+    //     } else {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => "Por razones de seguridad debe confirmar la ejecucion del codigo con la siguiente frase <Si quiero ejecutar este comando>",
+    //         ], 422);
+    //     }
+    // } catch (Throwable $th) {
+    //     return response()->json([
+    //         'status' => false,
+    //         'message' => $th->getMessage(),
+    //     ], 300);
+    // }
+
 });
 
 
@@ -93,5 +101,3 @@ Route::prefix('/multipago')->middleware(['access.app'])->group(function () {
     Route::post('/search-contrato-by-ci', [MultipagoController::class, 'recordContratoByCi']);
     Route::post('/search-coutas-by-num-contrato', [MultipagoController::class, 'recordCoutasByNumContrato']);
 });
-
-

@@ -57,8 +57,6 @@ class PersonalRequest extends FormRequest
         if (empty($this->input('n_de_contacto')) == false) {
             $rules['n_de_contacto'] = 'numeric';
         }
-
-
         return $rules;
     }
 

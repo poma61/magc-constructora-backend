@@ -39,8 +39,6 @@ class ContratoController extends Controller
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
                 ->select(
-                    //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
-                    // los datos del cliente al momento de editar el registro
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
@@ -53,7 +51,7 @@ class ContratoController extends Controller
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
                     //de un registro puede tener el mismo contrato.id porque clientes y contratos tiene una relacion de muchos a muchos
-                    'clientes_has_contratos.id as id_clientes_has_contratos',
+                  'clientes_has_contratos.id as id_clientes_has_contratos',
                 )
                 ->where('clientes.status', true)
                 ->where('contratos.status', true)
@@ -78,7 +76,6 @@ class ContratoController extends Controller
     public function store(ClienteContratoDetalleContratoRequest $request)
     {
         try {
-
             $desarrolladora = Desarrolladora::where('status', true)
                 ->where('nombres', $request->input('desarrolladora'))
                 ->first();
@@ -144,7 +141,7 @@ class ContratoController extends Controller
             }
 
 
-            foreach ($registered_clients  as $client) {
+            foreach ($registered_clients as $client) {
                 $cliente_has_contrato = new ClienteHasContrato();
                 $cliente_has_contrato->id_contrato = $contrato->id;
                 $cliente_has_contrato->id_cliente = $client['id']; //accedemos asi porque es un array
@@ -240,8 +237,6 @@ class ContratoController extends Controller
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
                 ->select(
-                    //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
-                    // los datos del cliente al momento de editar el registro
                     'clientes.nombres',
                     'clientes.apellido_paterno',
                     'clientes.apellido_materno',
@@ -262,18 +257,18 @@ class ContratoController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => "Contrato generado exitosamente!",
-                'record' => $contrato,
+                'records' => $contrato,
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage(),
-                'record' => null,
+                'records' => null,
             ], 500);
         }
     }
 
-    public function update(ClienteContratoDetalleContratoRequest $request,)
+    public function update(ClienteContratoDetalleContratoRequest $request, )
     {
         try {
             $request_contrato = $request->input('contrato');
@@ -437,8 +432,6 @@ class ContratoController extends Controller
                 ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
-                //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
-                // los datos del cliente al momento de editar el registro
                 ->select(
                     'clientes.nombres',
                     'clientes.apellido_paterno',
@@ -460,13 +453,13 @@ class ContratoController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => "Contrato actualizado exitosamente!",
-                'record' => $contrato,
+                'records' => $contrato,
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage(),
-                'record' => null,
+                'records' => null,
             ], 500);
         }
     }
@@ -593,8 +586,8 @@ class ContratoController extends Controller
         $n_contrato_parse = str_replace('/', '_', $contrato_cliente[0]->n_contrato);
         $pdf_path = "pdf/contrato/{$n_contrato_parse}_{$contrato_cliente[0]->nombres}_{$contrato_cliente[0]->apellido_paterno}_{$contrato_cliente[0]->apellido_materno}_" . uniqid() . ".pdf";
 
-        Storage::disk('public')->put($pdf_path,  $pdf->download()->getOriginalContent());
-        return  "/storage/{$pdf_path}";
+        Storage::disk('public')->put($pdf_path, $pdf->download()->getOriginalContent());
+        return "/storage/{$pdf_path}";
     }
 
     public function updatePdfFile(Request $request)
@@ -624,13 +617,11 @@ class ContratoController extends Controller
                 ->join('clientes_has_contratos', 'clientes_has_contratos.id_contrato', '=', 'contratos.id')
                 ->join('clientes', 'clientes.id', '=', 'clientes_has_contratos.id_cliente')
                 ->join('desarrolladoras', 'desarrolladoras.id', '=', 'clientes.id_desarrolladora')
-                //No se muestra todos los datos del cliente en el tablero, pero se envia todos los datos del cliente con el fin de mostrar todos
-                // los datos del cliente al momento de editar el registro
                 ->select(
                     'contratos.archivo_pdf',
                 )
                 ->where('contratos.id', $id_contrato)
-                ->get();
+                ->first();
 
             return response()->json([
                 'status' => true,
@@ -664,7 +655,7 @@ class ContratoController extends Controller
 
         $num_result = $num_result + 1;
         $num_result = str_pad($num_result, 4, '0', STR_PAD_LEFT); //agregar ceros al numero
-        $year =  date('Y');
-        return  "{$num_result}/{$year}";
+        $year = date('Y');
+        return "{$num_result}/{$year}";
     }
-}//class
+} //class
