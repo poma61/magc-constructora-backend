@@ -14,18 +14,19 @@ return new class extends Migration
             $table->id();
             $table->date('fecha_pago_couta');
             $table->double('monto', 40, 2);
-            $table->foreignId('id_couta');
+            $table->string('moneda',100);
             $table->string('lugar');
             $table->string('servicio');
             $table->longText('nota')->nullable();
             $table->string('metodo_de_pago');
             $table->string('nombres');
-            $table->string('apellido_paterno');
-            $table->string('apellido_materno');
+            $table->string('apellidos');
             $table->string('correo_electronico');
             $table->string('numero_de_contacto', 100);
             $table->boolean('transaction_status'); //=> true => transaccion valido, false=>significa que la transaccion fue anulada
+            $table->foreignId('id_couta');
             $table->timestamps();
+
             $table->foreign('id_couta')->references('id')->on('coutas');
         });
     }

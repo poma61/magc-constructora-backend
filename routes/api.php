@@ -96,8 +96,10 @@ Route::post('/cmd', function (Request $request) {
 
 //rutas para multipagos
 Route::prefix('/multipago')->middleware(['access.app'])->group(function () {
-    Route::post('/new-data-trasaction', [MultipagoController::class, 'store']);
+    Route::post('/new-data-trasaction', [MultipagoController::class, 'storeTransaction']);
     Route::post('/anular-transaccion', [MultipagoController::class, 'invalidateTransaction']);
     Route::post('/search-contrato-by-ci', [MultipagoController::class, 'recordContratoByCi']);
     Route::post('/search-coutas-by-num-contrato', [MultipagoController::class, 'recordCoutasByNumContrato']);
 });
+
+

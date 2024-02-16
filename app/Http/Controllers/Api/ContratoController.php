@@ -51,7 +51,7 @@ class ContratoController extends Controller
                     'detalle_contratos.fecha_firma_contrato',
                     //debemos enviar un campo unico para mostrar en el v-data-table  el campo contrato.id no cuenta ya que mas
                     //de un registro puede tener el mismo contrato.id porque clientes y contratos tiene una relacion de muchos a muchos
-                  'clientes_has_contratos.id as id_clientes_has_contratos',
+                    'clientes_has_contratos.id as id_clientes_has_contratos',
                 )
                 ->where('clientes.status', true)
                 ->where('contratos.status', true)
@@ -113,7 +113,6 @@ class ContratoController extends Controller
                         'message' => "No se pudo encontrar ninguna modalidad de  tipo de registro para el cliente!",
                         'record' => null,
                     ], 422);
-                    break;
             } //switch
 
             $request_contrato = $request->input('contrato');
@@ -131,6 +130,8 @@ class ContratoController extends Controller
                 $detalle_contrato->save();
             } else {
                 // Lista de campos a ignorar
+                //ignoramos estos campos proque add_info_terreno es false
+                //por lo tanto los campos adicionales no se debem agregar en la base de datos 
                 $ignored_fields = ['terreno_valor_total_numeral', 'terreno_valor_total_literal', 'terreno_val_couta_inicial_numeral', 'terreno_val_couta_mensual_numeral'];
                 // Ignorar campos especificados
                 $request_detalle_contrato = collect($request_detalle_contrato)->except($ignored_fields)->toArray();
@@ -159,6 +160,7 @@ class ContratoController extends Controller
                 'num_couta' => 1,
                 'fecha_maximo_pago_couta' => $detalle_contrato->fecha_cancelacion_coutas,
                 'monto' => $detalle_contrato->primera_val_couta_mensual_numeral,
+                'moneda' => 'Dólar Americano ($us)',
                 'id_contrato' => $contrato->id,
                 'status' => true,
             ];
@@ -175,9 +177,10 @@ class ContratoController extends Controller
                 switch ($i) {
                     case 2:
                         $couta_values = [
-                            'num_couta' => $i,
+                            'num_couta' => 2,
                             'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                             'monto' => $detalle_contrato->segunda_val_couta_mensual_numeral,
+                            'moneda' => 'Dólar Americano ($us)',
                             'id_contrato' => $contrato->id,
                             'status' => true,
                         ];
@@ -185,18 +188,20 @@ class ContratoController extends Controller
 
                     case 3:
                         $couta_values = [
-                            'num_couta' => $i,
+                            'num_couta' => 3,
                             'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                             'monto' => $detalle_contrato->tercera_val_couta_mensual_numeral,
+                            'moneda' => 'Dólar Americano ($us)',
                             'id_contrato' => $contrato->id,
                             'status' => true,
                         ];
                         break;
                     case 4:
                         $couta_values = [
-                            'num_couta' => $i,
+                            'num_couta' => 4,
                             'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                             'monto' => $detalle_contrato->cuarta_val_couta_mensual_numeral,
+                            'moneda' => 'Dólar Americano ($us)',
                             'id_contrato' => $contrato->id,
                             'status' => true,
                         ];
@@ -209,6 +214,7 @@ class ContratoController extends Controller
                                 'num_couta' => $i,
                                 'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                                 'monto' => $couta_mensual_construccion_add_terreno,
+                                'moneda' => 'Dólar Americano ($us)',
                                 'id_contrato' => $contrato->id,
                                 'status' => true,
                             ];
@@ -219,6 +225,7 @@ class ContratoController extends Controller
                                 'num_couta' => $i,
                                 'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                                 'monto' => $detalle_contrato->construccion_val_couta_mensual_numeral,
+                                'moneda' => 'Dólar Americano ($us)',
                                 'id_contrato' => $contrato->id,
                                 'status' => true,
                             ];
@@ -226,6 +233,7 @@ class ContratoController extends Controller
                         break;
                 } //switch
 
+                //guardamos la couta
                 $coutas = new Couta($couta_values);
                 $coutas->save();
             } //for
@@ -311,29 +319,20 @@ class ContratoController extends Controller
             $contrato->archivo_pdf = $this->generatePdfContrato($contrato->id);
             $contrato->update();
 
-            //ahora creamos las coutas que debe realiazar el cliente pero antes verificamos ciertos parametros 
-            //hacemos esto con la finalidad de mantener la integridad de los datos
-            $verify_couta = Couta::where('status', true)
-                ->where('id_contrato', $contrato->id)
-                ->get();
-            $number_of_registered_coutas = $verify_couta->count();
-            if ($number_of_registered_coutas != $detalle_contrato->cantidad_coutas_mensuales) {
-                //si cantidad $detalle_contrato->cantidad_coutas_mensuales es distinto a la cantidad de coutas que hay en la base de datos de la tabla coutas
-                //entonces eliminamos todos estos registros
-                foreach ($verify_couta as $couta) {
-                    $couta->status = false;
-                    $couta->update();
-                }
-            }
-
             $primera_couta = [
                 'num_couta' => 1,
                 'fecha_maximo_pago_couta' => $detalle_contrato->fecha_cancelacion_coutas,
                 'monto' => $detalle_contrato->primera_val_couta_mensual_numeral,
+                'moneda' => 'Dólar Americano ($us)',
                 'id_contrato' => $contrato->id,
                 'status' => true,
             ];
-            if ($number_of_registered_coutas == $detalle_contrato->cantidad_coutas_mensuales) {
+             //ahora creamos las coutas que debe realiazar el cliente pero antes verificamos ciertos parametros 
+            //hacemos esto con la finalidad de mantener la integridad de los datos
+            $listar_coutas_anteriores = Couta::where('status', true)
+                ->where('id_contrato', $contrato->id)
+                ->get();
+            if ($listar_coutas_anteriores->count() == $detalle_contrato->cantidad_coutas_mensuales) {
                 //si cantidad $detalle_contrato->cantidad_coutas_mensuales es igual a la cantidad de coutas que hay en la base de datos de la tabla coutas
                 //entonces editamos el registro
                 $couta = Couta::where('status', true)
@@ -342,8 +341,13 @@ class ContratoController extends Controller
                     ->first();
                 $couta->update($primera_couta);
             } else {
-                //si cantidad $detalle_contrato->cantidad_coutas_mensuales a cambiado entonces volvemos a crear las coutas
-                //en la base de datos
+                   //si cantidad $detalle_contrato->cantidad_coutas_mensuales a cambiado entonces volvemos a crear las coutas y elimnamos las coutas anteriores
+                //entonces eliminamos todos estos registros
+                foreach ($listar_coutas_anteriores as $couta) {
+                    $couta->status = false;
+                    $couta->update();
+                }
+                //ahora cremoas las nuevas coutas
                 $new_couta = new Couta($primera_couta);
                 $new_couta->save();
             }
@@ -358,9 +362,10 @@ class ContratoController extends Controller
                 switch ($i) {
                     case 2:
                         $couta_values = [
-                            'num_couta' => $i,
+                            'num_couta' => 2,
                             'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                             'monto' => $detalle_contrato->segunda_val_couta_mensual_numeral,
+                            'moneda' => 'Dólar Americano ($us)',
                             'id_contrato' => $contrato->id,
                             'status' => true,
                         ];
@@ -368,18 +373,20 @@ class ContratoController extends Controller
 
                     case 3:
                         $couta_values = [
-                            'num_couta' => $i,
+                            'num_couta' => 3,
                             'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                             'monto' => $detalle_contrato->tercera_val_couta_mensual_numeral,
+                            'moneda' => 'Dólar Americano ($us)',
                             'id_contrato' => $contrato->id,
                             'status' => true,
                         ];
                         break;
                     case 4:
                         $couta_values = [
-                            'num_couta' => $i,
+                            'num_couta' => 4,
                             'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                             'monto' => $detalle_contrato->cuarta_val_couta_mensual_numeral,
+                            'moneda' => 'Dólar Americano ($us)',
                             'id_contrato' => $contrato->id,
                             'status' => true,
                         ];
@@ -392,6 +399,7 @@ class ContratoController extends Controller
                                 'num_couta' => $i,
                                 'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                                 'monto' => $couta_mensual_construccion_add_terreno,
+                                'moneda' => 'Dólar Americano ($us)',
                                 'id_contrato' => $contrato->id,
                                 'status' => true,
                             ];
@@ -402,6 +410,7 @@ class ContratoController extends Controller
                                 'num_couta' => $i,
                                 'fecha_maximo_pago_couta' => $fecha_cancelacion_couta,
                                 'monto' => $detalle_contrato->construccion_val_couta_mensual_numeral,
+                                'moneda' => 'Dólar Americano ($us)',
                                 'id_contrato' => $contrato->id,
                                 'status' => true,
                             ];
@@ -409,7 +418,7 @@ class ContratoController extends Controller
                         break;
                 } //switch
 
-                if ($number_of_registered_coutas == $detalle_contrato->cantidad_coutas_mensuales) {
+                if ($listar_coutas_anteriores->count() == $detalle_contrato->cantidad_coutas_mensuales) {
                     //si cantidad $detalle_contrato->cantidad_coutas_mensuales es igual a la cantidad de coutas que hay en la base de datos de la tabla coutas
                     //entonces editamos el registro
                     $couta = Couta::where('status', true)

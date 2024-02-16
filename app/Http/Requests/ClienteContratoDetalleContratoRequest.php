@@ -56,7 +56,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                     $fecha = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
                     // Verificar que el día no sea 28, 30 ni 31
                     if (in_array($fecha->day, [28, 29, 30, 31])) {
-                        $fail('Selecciona una fecha válida, evitando los días 28, 29, 30 y 31.');
+                        $fail('Seleccione una fecha válida, evitando los días 28, 29, 30 y 31.');
                     }
                 },
             ],
@@ -98,6 +98,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
                                 $query->where('status', true);
                             })->ignore($this->input("clients.{$key}.id")),
                         ];
+                        $rules["clients.*.ci"] = "distinct";//verifica si el usuario envia ci duplicados en el json
                         $rules["clients.{$key}.ci_expedido"] = 'required';
                         $rules["clients.{$key}.direccion"] = 'required';
                     }
@@ -202,6 +203,7 @@ class ClienteContratoDetalleContratoRequest extends FormRequest
             $messages["clients.{$key}.n_de_contacto.integer"] = 'El campo n° de contacto debe ser un número entero.';
             $messages["clients.{$key}.ci.required"] = 'El campo ci es requerido.';
             $messages["clients.{$key}.ci.unique"] = 'El campo ci ya ha sido tomado.';
+            $messages["clients.*.ci.distinct"] = 'El campo ci tiene un valor duplicado.';
             $messages["clients.{$key}.ci_expedido.required"] = 'El campo expedido es requerido.';
             $messages["clients.{$key}.direccion.required"] = 'El campo direccion es requerido.';
             $messages["clients.{$key}.correo_electronico.email"] = 'El formato del correo electronico no es válido.';

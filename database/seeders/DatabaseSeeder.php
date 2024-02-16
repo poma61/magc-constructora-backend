@@ -42,8 +42,8 @@ class DatabaseSeeder extends Seeder
         Usuario::create([
             'user' => 'magc',
             'status' => true,
-            'password' => '$2y$12$sT5JROmJ9YTovWS91Sz.6.PQNNEPUsoj9IXVx1A9RnuZ06HxpcUWe', //=> Magc2024**//
-            //'password' => '$2y$12$JxmG1vq6EVpT8Bz7k/ArxOZnnaKnsFpNMYV6g7Ck5K.FMyItMOby6', //=> 1234
+            //'password' => '$2y$12$sT5JROmJ9YTovWS91Sz.6.PQNNEPUsoj9IXVx1A9RnuZ06HxpcUWe', //=> Magc2024**//
+            'password' => '$2y$12$JxmG1vq6EVpT8Bz7k/ArxOZnnaKnsFpNMYV6g7Ck5K.FMyItMOby6', //=> 1234
             'id_personal' => 1,
         ]);
 

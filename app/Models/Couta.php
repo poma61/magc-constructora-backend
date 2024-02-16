@@ -13,6 +13,7 @@ class Couta extends Model
         'num_couta',
         'fecha_maximo_pago_couta',
         'monto',
+        'moneda',
         'id_contrato',
         'status',
     ];

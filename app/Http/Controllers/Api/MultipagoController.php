@@ -13,31 +13,58 @@ use Throwable;
 class MultipagoController extends Controller
 {
 
-    public function store(TransaccionPagoCoutaRequest $request)
+    public function storeTransaction(TransaccionPagoCoutaRequest $request)
     {
         try {
-            $transaccion = TransaccionPagoCouta::where('id_couta', $request->input('id_couta'))
-                ->where('transaction_status', true)
-                ->first();
+            foreach ($request->input("transacciones", []) as $transaccion_values) {
+                //verificamos si la couta existe para evitar errores con llaves foraneas
+                $couta = Couta::where('id', $transaccion_values['id_couta'])
+                    ->where('status', true)
+                    ->exists();
+                if (!$couta) {
+                    return response()->json([
+                        'result' => null,
+                        'status' => false,
+                        'message' => "La couta con id {$transaccion_values['id_couta']} no se encuentra en el sistema!"
+                    ], 404);
+                }
 
-            //en la base de datos solo debe de haber una transaction_status=true para cada couta
-            //por eso por estabilidad de los datos se verifica si hay trasancciones vigentes,
-            //puede hacer multiples transacciones anuladas, pero solo puede haber una transaccion vigente para cada couta
-            //la vigencia de la trasanccion se define por transaction_status  true=>vigente, false=> anulada
-            if ($transaccion != null) {
-                return response()->json([
-                    'result' => $transaccion,
-                    'status' => false,
-                    'message' => "Hay una transacción vigente, debe anular la transacción para crear una nueva transacción."
-                ], 422);
+                $transaccion = TransaccionPagoCouta::where('id_couta', $transaccion_values['id_couta'])
+                    ->where('transaction_status', true)
+                    ->first();
+
+                //en la base de datos solo debe de haber una transaction_status=true para cada couta
+                //por estabilidad de los datos se verifica si hay trasancciones vigentes,
+                //puede haber multiples transacciones anuladas, pero solo puede haber una transaccion vigente para cada couta
+                //la vigencia de la trasanccion se define por transaction_status  true=>vigente, false=> anulada
+                if ($transaccion != null) {
+                    //creamos el 'id_transaccion' para que el desarrollador frontend pueda entender mejor los datos
+                    $transaccion->id_transaccion = $transaccion->id;
+                    unset($transaccion->id);//eliminamos $transaccion->id
+
+                    return response()->json([
+                        'result' => $transaccion,
+                        'status' => false,
+                        'message' => "Hay una transacción vigente, debe anular la transacción para crear una nueva transacción."
+                    ], 422);
+                }
             }
 
-            $transaccion = new TransaccionPagoCouta($request->all());
-            $transaccion->transaction_status = true;
-            $transaccion->save();
+            $__transacciones = $request->input("transacciones", []);
+            foreach ($__transacciones as $transaccion_values) {
+                $transaccion = new TransaccionPagoCouta($transaccion_values);
+                $transaccion->transaction_status = true;
+                $transaccion->save();
+
+                //creamos el 'id_transaccion' para que el desarrollador frontend pueda entender mejor los datos
+                $transaccion->id_transaccion = $transaccion->id;
+                unset($transaccion->id);//eliminamos $transaccion->id
+
+                $registered_transacciones[] = $transaccion;
+            }
 
             return response()->json([
-                'result' => $transaccion,
+                'results' => $registered_transacciones,
                 'status' => true,
                 'message' => "OK"
             ], 200);
@@ -48,53 +75,33 @@ class MultipagoController extends Controller
                 'message' => $th->getMessage(),
             ], 500);
         }
-    } //store
+    } //storeTransaction
 
-
-    public function update(TransaccionPagoCoutaRequest $request)
-    {
-        try {
-            $transaccion = TransaccionPagoCouta::where('id', $request->input('id'))
-                ->where('transaction_status', true)
-                ->first();
-
-            if ($transaccion == null) {
-                return response()->json([
-                    'result' => null,
-                    'status' => false,
-                    'message' => "Esta transacción fue actualizada.",
-                ], 404);
-            }
-
-            $transaccion->update($request->all());
-
-            return response()->json([
-                'result' => $transaccion,
-                'status' => true,
-                'message' => "OK"
-            ], 200);
-        } catch (Throwable $th) {
-            return response()->json([
-                'result' => null,
-                'status' => false,
-                'message' => $th->getMessage(),
-            ], 500);
-        }
-    } //update
 
     public function invalidateTransaction(Request $request)
     {
         try {
-            $transaccion = TransaccionPagoCouta::where('id', $request->input('id'))
-                ->where('transaction_status', true)
-                ->first();
+            //verificamos si la transaccion a anular existe
+            //Hacemos esto porque hay la posibilidad de que el id_couta este eliminada, pero  talvez este id_couta ya fue cancelada anteriormente
+            //La couta se elimina cuando actualizamos el contrato entonces la cantidad de coutas se vuelven a generar
+            //para resguardar integridad de los datos entonces por eso  verificamos si dicha couta esta vigente en la base de datos
+            //En otros casos este paso no es necesario, pero como estamos registrando Transacciones de pagos entonces ahi si es necesario
+            $couta = Couta::join('transacciones_pago_coutas', 'transacciones_pago_coutas.id_couta', '=', 'coutas.id')
+                ->where('transacciones_pago_coutas.id', $request->input('id_transaccion'))
+                ->where('coutas.status', true)
+                ->where('transacciones_pago_coutas.transaction_status', true)
+                ->exists();
 
-            if ($transaccion == null) {
+            if (!$couta) {
                 return response()->json([
                     'status' => false,
-                    'message' => "Esta transacción no se encuentra en el sistema o ya fue anulada!",
+                    'message' => "Esta transacción no se encuentra en el sistema y/o ya fue anulada!"
                 ], 404);
             }
+
+            $transaccion = TransaccionPagoCouta::where('id', $request->input('id_transaccion'))
+                ->first();
+
             $transaccion->transaction_status = false;
             $transaccion->update();
 
@@ -151,6 +158,8 @@ class MultipagoController extends Controller
     public function recordCoutasByNumContrato(Request $request)
     {
         try {
+            //Se debe hacer un join con  transacciones_pago_coutas para verificar si hay coutas pagas
+            //solo de es forma se puede saber si la couta esta pagada o no
             $coutas = Couta::join('contratos', 'contratos.id', '=', 'coutas.id_contrato')
                 ->leftJoin('transacciones_pago_coutas', 'transacciones_pago_coutas.id_couta', '=', 'coutas.id')
                 ->select(
@@ -158,6 +167,7 @@ class MultipagoController extends Controller
                     'coutas.num_couta',
                     'coutas.fecha_maximo_pago_couta',
                     'coutas.monto',
+                    'coutas.moneda',
                     'contratos.n_contrato',
                     'transacciones_pago_coutas.transaction_status as couta_pagada'
                 )
@@ -179,6 +189,7 @@ class MultipagoController extends Controller
                 //porque estamos haciendo un join, entonces para evitar eso se hace el distinct
                 ->distinct()
                 ->get();
+
             // el codigo es euivalente a 
             // SELECT DISTINCT
             //     coutas.id,

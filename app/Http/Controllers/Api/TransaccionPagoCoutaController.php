@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 //add
 use App\Models\Cliente;
-use App\Models\Couta;
 use App\Models\Desarrolladora;
 use App\Models\TransaccionPagoCouta;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 
@@ -103,4 +101,4 @@ class TransaccionPagoCoutaController extends Controller
             ], 500);
         }
     }
-}
+}//class

@@ -13,17 +13,17 @@ class TransaccionPagoCouta extends Model
     protected $fillable = [
         'fecha_pago_couta',
         'monto',
-        'id_couta',
+        'moneda',
         'lugar',
         'servicio',
         'nota',
         'metodo_de_pago',
         'nombres',
-        'apellido_paterno',
-        'apellido_materno',
+        'apellidos',
         'correo_electronico',
         'numero_de_contacto',
         'transaction_status',
+        'id_couta',
     ];
 
     protected $hidden = [
