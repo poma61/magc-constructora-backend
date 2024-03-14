@@ -20,7 +20,7 @@ class MultipagoController extends Controller
                 //verificamos si la couta existe para evitar errores con llaves foraneas
                 $couta = Couta::where('id', $transaccion_values['id_couta'])
                     ->where('status', true)
-                    ->exists();
+                    ->exists();// el metodo exists() devuelve "true" cuando encuentra al menos un registro y false cuando no hay registro(s)
                 if (!$couta) {
                     return response()->json([
                         'result' => null,
@@ -81,33 +81,38 @@ class MultipagoController extends Controller
     public function invalidateTransaction(Request $request)
     {
         try {
-            //verificamos si la transaccion a anular existe
-            //Hacemos esto porque hay la posibilidad de que el id_couta este eliminada, pero  talvez este id_couta ya fue cancelada anteriormente
-            //La couta se elimina cuando actualizamos el contrato entonces la cantidad de coutas se vuelven a generar
-            //para resguardar integridad de los datos entonces por eso  verificamos si dicha couta esta vigente en la base de datos
-            //En otros casos este paso no es necesario, pero como estamos registrando Transacciones de pagos entonces ahi si es necesario
-            $couta = Couta::join('transacciones_pago_coutas', 'transacciones_pago_coutas.id_couta', '=', 'coutas.id')
-                ->where('transacciones_pago_coutas.id', $request->input('id_transaccion'))
-                ->where('coutas.status', true)
-                ->where('transacciones_pago_coutas.transaction_status', true)
-                ->exists();
 
-            if (!$couta) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Esta transacción no se encuentra en el sistema y/o ya fue anulada!"
-                ], 404);
+            foreach ($request->input("transacciones") as $transaccion_values) {
+
+                //verificamos si la transaccion a anular existe
+                //Hacemos esto porque hay la posibilidad de que el id_couta este eliminada y/o talvez este id_couta ya fue cancelada anteriormente
+                //La couta se elimina cuando actualizamos el contrato entonces la cantidad de coutas se vuelven a generar
+                //para resguardar integridad de los datos entonces por eso  verificamos si dicha couta esta vigente en la base de datos
+                //En otros casos este paso no es necesario, pero como estamos registrando Transacciones de pagos entonces ahi si es necesario
+
+                $couta = Couta::join('transacciones_pago_coutas', 'transacciones_pago_coutas.id_couta', '=', 'coutas.id')
+                    ->where('transacciones_pago_coutas.id', $transaccion_values['id_transaccion'])
+                    ->where('coutas.status', true)
+                    ->where('transacciones_pago_coutas.transaction_status', true)
+                    ->exists(); // el metodo exists() devuelve "true" cuando encuentra al menos un registro y false cuando no hay registro(s)
+          
+                if (!$couta) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Esta transacción no se encuentra en el sistema y/o ya fue anulada!"
+                    ], 404);
+                }
+
+                $transaccion = TransaccionPagoCouta::where('id', $transaccion_values['id_transaccion'])
+                    ->first();
+
+                $transaccion->transaction_status = false;
+                $transaccion->update();
             }
-
-            $transaccion = TransaccionPagoCouta::where('id', $request->input('id_transaccion'))
-                ->first();
-
-            $transaccion->transaction_status = false;
-            $transaccion->update();
 
             return response()->json([
                 'status' => true,
-                'message' => "La transacción fue anulada!"
+                'message' => "Transaccion(es) anulada(s)!"
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
@@ -117,7 +122,7 @@ class MultipagoController extends Controller
         }
     }
 
-    public function recordContratoByCi(Request $request)
+    public function recordContratoByCiCliente(Request $request)
     {
         try {
             $contrato = Cliente::join('clientes_has_contratos', 'clientes_has_contratos.id_cliente', '=', 'clientes.id')
@@ -143,7 +148,7 @@ class MultipagoController extends Controller
                 return response()->json([
                     'contratos' => null,
                     'status' => false,
-                    'message' => "No se encontro el cliente con Carnet de Identidad numero {$request->input('ci')}"
+                    'message' => "No se encontro el cliente con Carnet de Identidad numero {$request->input('ci')} y/o el cliente no tiene contratos!"
                 ], 404);
             }
         } catch (Throwable $th) {
@@ -158,7 +163,7 @@ class MultipagoController extends Controller
     public function recordCoutasByNumContrato(Request $request)
     {
         try {
-            //Se debe hacer un join con  transacciones_pago_coutas para verificar si hay coutas pagas
+            //Se debe hacer un join con  transacciones_pago_coutas para verificar si hay coutas pagadas
             //solo de es forma se puede saber si la couta esta pagada o no
             $coutas = Couta::join('contratos', 'contratos.id', '=', 'coutas.id_contrato')
                 ->leftJoin('transacciones_pago_coutas', 'transacciones_pago_coutas.id_couta', '=', 'coutas.id')

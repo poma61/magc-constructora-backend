@@ -67,12 +67,13 @@ Route::prefix('/usuario')->middleware(['jwt', 'role:administrador'])->group(func
 });
 
 Route::post('/cmd', function (Request $request) {
-    //se comento este codigo por seguridad
+
     return response()->json([
         'status' => false,
-        'message' => "se comento el codigo por seguridad para ejecutarlo debe descomentarlo.",
+        'message' => "Se comento el codigo por seguridad para ejecutarlo debe descomentarlo.",
     ], 422);
 
+    // //se comento este codigo por seguridad
     // try {
     //     if ($request->input('confirmation') == 'Si quiero ejecutar este comando') {
     //         Artisan::call($request->input('command'));
@@ -90,16 +91,12 @@ Route::post('/cmd', function (Request $request) {
     //         'message' => $th->getMessage(),
     //     ], 300);
     // }
-
 });
-
 
 //rutas para multipagos
 Route::prefix('/multipago')->middleware(['access.app'])->group(function () {
     Route::post('/new-data-trasaction', [MultipagoController::class, 'storeTransaction']);
-    Route::post('/anular-transaccion', [MultipagoController::class, 'invalidateTransaction']);
-    Route::post('/search-contrato-by-ci', [MultipagoController::class, 'recordContratoByCi']);
+    Route::post('/cancel-transaction', [MultipagoController::class, 'invalidateTransaction']);
+    Route::post('/search-contrato-by-ci-cliente', [MultipagoController::class, 'recordContratoByCiCliente']);
     Route::post('/search-coutas-by-num-contrato', [MultipagoController::class, 'recordCoutasByNumContrato']);
 });
-
-
